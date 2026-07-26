@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap');
+@import 'tailwindcss';
+
+:root {
+  color-scheme: dark;
+  --brand-bg: #0f0c2c;
+  --brand-bg-soft: #171239;
+  --brand-panel: rgba(23, 18, 57, 0.88);
+  --brand-panel-strong: #1e1847;
+  --brand-panel-soft: rgba(255, 255, 255, 0.04);
+  --brand-border: rgba(255, 255, 255, 0.1);
+  --brand-border-strong: rgba(255, 255, 255, 0.18);
+  --brand-text: #f4f4fa;
+  --brand-muted: #bdb8d8;
+  --brand-subtle: #928cb3;
+  --brand-coral: #ee204d;
+  --brand-teal: #1dab89;
+  --brand-violet: #a095d0;
+  --brand-shadow: 0 24px 80px rgba(5, 5, 19, 0.45);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--brand-bg);
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(29, 171, 137, 0.18), transparent 28%),
+    radial-gradient(circle at top left, rgba(238, 32, 77, 0.18), transparent 32%),
+    linear-gradient(180deg, #130f31 0%, #0c0a22 100%);
+  color: var(--brand-text);
+  font-family: 'Tajawal', sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+  opacity: 0.28;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Alexandria', sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button{
+  cursor: pointer;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+pre {
+  margin: 0;
+  font-family:
+    'SFMono-Regular',
+    ui-monospace,
+    'Cascadia Code',
+    'Source Code Pro',
+    Menlo,
+    monospace;
+}
+
+::selection {
+  background: rgba(238, 32, 77, 0.35);
+  color: #fff;
+}
+
+#root {
+  min-height: 100vh;
+  height: 100%;
+  position: relative;
+  isolation: isolate;
+}
+
+.dashboard-scroll {
+  scrollbar-gutter: stable;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: rgba(160, 149, 208, 0.35);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 149, 208, 0.55);
+  background-clip: padding-box;
+}

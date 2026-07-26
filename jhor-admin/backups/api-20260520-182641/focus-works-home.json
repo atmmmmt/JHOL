@@ -1,0 +1,269 @@
+{
+  "works_projects": [
+    {
+      "id": "e8c6f1f0-f640-4fb2-a28e-e0660755adc5",
+      "contentType": 18,
+      "contentTypeName": "18",
+      "updatedAt": "2026-04-04T21:16:48.579958Z",
+      "body": {
+        "_meta": {
+          "tabKey": "works-projects",
+          "tabLabel": "مشاريع الأعمال",
+          "sidebarGroup": "صفحة الأعمال",
+          "groupOrder": 8,
+          "tabOrder": 2,
+          "sectionKey": "works_projects",
+          "sectionType": "projects",
+          "shared": false,
+          "assignToPages": [
+            "works",
+            "work-details"
+          ],
+          "sourceContentTypes": [
+            8
+          ]
+        },
+        "projects": [
+          {
+            "slug": "staff-safety",
+            "number": "01",
+            "title": "ستاف للسلامة",
+            "category": "هوية بصرية",
+            "client": "Staff Safety",
+            "listingDescription": "تصميم الهوية البصرية الشاملة لشركة متخصصة في معدات وأنظمة السلامة ومكافحة الحرائق، لتعكس الموثوقية والأمان.",
+            "overview": "في هذا المشروع صممنا حضوراً بصرياً يترجم الثقة والدقة اللتين تحتاجهما علامة تعمل في قطاع السلامة. كان الهدف أن تبدو الهوية عملية، واضحة، وقادرة على الظهور بقوة في المطبوعات والمنصات الميدانية.",
+            "supportText": "ركزنا على بناء نظام بصري يمكنه التمدد بسهولة على المواد الإعلانية، المحتوى التعريفي، ونقاط العرض، مع الحفاظ على إحساس مهني ثابت في كل استخدام.",
+            "coverImage": "https://gohor.octoserv-comp.com/storage/e96361f3b383441a92aa0a1c542b19f1.jpg",
+            "storyBlocks": [
+              {
+                "title": "المشهد الرئيسي للمشروع",
+                "description": "تصميم الهوية البصرية الشاملة لشركة متخصصة في معدات وأنظمة السلامة ومكافحة الحرائق، لتعكس الموثوقية والأمان.",
+                "image": "http://gohor.octoserv-comp.com/storage/e05676ff21c241788201dd78e67f8eaf.webp"
+              },
+              {
+                "title": "الهوية على المواد التعريفية",
+                "description": "تمت معالجة الألوان والعناصر الرسومية لتظهر العلامة بوضوح على المواد التعريفية والبطاقات والمخرجات التسويقية، مع لغة بصرية تساعد العميل على التمييز بسرعة بين المنتجات والخدمات.",
+                "image": "http://gohor.octoserv-comp.com/storage/85657918d1ce4c9983d7296e867ab746.webp"
+              },
+              {
+                "title": "تجهيزات العرض والتقديم",
+                "description": "صممنا نقاط عرض تسهّل شرح المنتجات داخل المعارض والاجتماعات التجارية، مع اهتمام كبير بوضوح الرسالة وسرعة التقاط الفكرة بصرياً.",
+                "image": "http://gohor.octoserv-comp.com/storage/4c94f138f94588af724de51a42a389.webp"
+              }
+            ]
+          },
+          {
+            "slug": "home-luxury-real-estate",
+            "number": "02",
+            "title": "رفاهية البيت العقارية",
+            "category": "شعار وهوية",
+            "client": "Home Luxury",
+            "listingDescription": "تصميم شعار وهوية بصرية تعكس الفخامة والثقة لشركة تطوير وتسويق عقاري تلبي تطلعات عملائها المتميزين.",
+            "overview": "هذا المشروع احتاج إلى هوية تحمل طابعاً راقياً لكنها لا تفقد وضوحها في التطبيقات اليومية. عملنا على تكوين بصري يعطي الإحساس بالفخامة والثبات مع سهولة استخدام في العروض والمواد الرقمية.",
+            "supportText": "ركزنا على أن تبقى العلامة متماسكة في مختلف المقاسات والاستخدامات، من التعريف بالمشروع وحتى المواد التسويقية التي تقود إلى اتخاذ القرار.",
+            "coverImage": "https://gohor.octoserv-comp.com/storage/e96361f3b383441a92aa0a1c542b19f1.jpg",
+            "storyBlocks": [
+              {
+                "title": "المشهد الرئيسي للمشروع",
+                "description": "تصميم شعار وهوية بصرية تعكس الفخامة والثقة لشركة تطوير وتسويق عقاري تلبي تطلعات عملائها المتميزين.",
+                "image": "http://gohor.octoserv-comp.com/storage/a6f3f065dbef4fdd996ff5655f85c28c.webp"
+              },
+              {
+                "title": "مواد العرض والتسويق",
+                "description": "تم تطوير مخرجات بصرية تبرز جودة المشروع وتساعد في تقديم العروض العقارية بصورة أنيقة ومنظمة، مع عناية خاصة بتوازن النصوص والعناصر داخل المساحات البيضاء.",
+                "image": "http://gohor.octoserv-comp.com/storage/0978616b503140fa9533a96712749b10.webp"
+              },
+              {
+                "title": "تماسك العلامة عبر نقاط التواصل",
+                "description": "بُنيت الهوية لتعمل بسلاسة على المنصات الرقمية والمطبوعات، بحيث يظهر نفس الإحساس البصري في كل نقطة تواصل مع العميل المحتمل.",
+                "image": "http://gohor.octoserv-comp.com/storage/1944b674ccda4140970617a980dc7f70.webp"
+              }
+            ]
+          },
+          {
+            "slug": "jsr-miemar",
+            "number": "03",
+            "title": "جسر المعمار للمقاولات",
+            "category": "هوية ومطبوعات",
+            "client": "Jsr Miemar",
+            "listingDescription": "بناء هوية بصرية قوية تعبر عن التطور والاحترافية في قطاع البناء والتشييد تحت شعار \"نبني جسراً للقمة\".",
+            "overview": "طورنا لهذا المشروع هوية تنقل الصلابة والطموح في آن واحد، وتمنح الشركة حضوراً أوضح في السوق من خلال شعار، ألوان، ومجموعة مواد داعمة يمكن استخدامها ميدانياً وتسويقياً.",
+            "supportText": "المطلوب لم يكن مجرد شكل جميل، بل نظام بصري يواكب بيئة المقاولات والمواد التعريفية والعروض الخارجية مع احتفاظه بالشخصية الواضحة نفسها.",
+            "coverImage": "https://gohor.octoserv-comp.com/storage/bcdef0196ac94422ae66a32ae3910528.jpg",
+            "storyBlocks": [
+              {
+                "title": "المشهد الرئيسي للمشروع",
+                "description": "بناء هوية بصرية قوية تعبر عن التطور والاحترافية في قطاع البناء والتشييد تحت شعار \"نبني جسراً للقمة\".",
+                "image": "http://gohor.octoserv-comp.com/storage/9d9c6de8133349e89316f2aaa62aef11.webp"
+              },
+              {
+                "title": "المواد الإعلانية الخارجية",
+                "description": "صممنا مطبوعات ولوحات تساعد في عرض خدمات الشركة داخل مواقع العمل وخارجها، مع مراعاة الوضوح البصري من مسافات مختلفة وسهولة قراءة الرسالة الأساسية.",
+                "image": "http://gohor.octoserv-comp.com/storage/694db03716a8409c8dc3e11f21c8645f.webp"
+              },
+              {
+                "title": "تطبيق الهوية داخل بيئة العمل",
+                "description": "امتدت الهوية إلى عناصر الاستخدام اليومي مثل الزي الموحد والمواد التشغيلية، لتظهر العلامة بشكل متماسك في كل موقع عمل.",
+                "image": "http://gohor.octoserv-comp.com/storage/03c7f8867bfa42a9bd57fcb8cc35afa6.webp"
+              }
+            ]
+          },
+          {
+            "slug": "test",
+            "number": "0",
+            "title": "عنوان المشروع",
+            "category": "برمجة",
+            "client": "proo",
+            "listingDescription": "وصف لا على التعيين ",
+            "overview": "وصف لا على التعيين  وصف لا على التعيين  ",
+            "supportText": "وصف لا على التعيين وصف لا على التعيين وصف لا على التعيين وصف لا على التعيين ",
+            "coverImage": "http://gohor.octoserv-comp.com/storage/78d368abd4c24e9da2cea66b1ea6cf16.webp",
+            "storyBlocks": [
+              "فثسف فثسفثسف",
+              "فثسفث سثفسفث"
+            ]
+          },
+          {
+            "slug": "test-slug",
+            "number": "12",
+            "title": "عنوان عشوائي بعدل التعديل",
+            "category": "برمجة",
+            "client": "شركة",
+            "listingDescription": "وصف وصف وصف ",
+            "overview": "نبذه عامه",
+            "supportText": "نص مساند نص مساند نص مساند نص مساند ",
+            "coverImage": "http://gohor.octoserv-comp.com/storage/0978616b503140fa9533a96712749b10.webp",
+            "storyBlocks": [
+              {
+                "title": "تفاصيل المشؤرع",
+                "description": "وصف لعرضه في التفاصيل",
+                "image": "http://gohor.octoserv-comp.com/storage/0aeb7fc10c354dccbc35004b2a5ca205.webp"
+              },
+              {
+                "title": "تعاصيل",
+                "description": "وصف وصف ",
+                "image": "http://gohor.octoserv-comp.com/storage/21771f198cc14456b503efcde5db1123.webp"
+              }
+            ]
+          }
+        ],
+        "label": "مشاريع نفتخر بها",
+        "title": "مشاريع نفتخر بها",
+        "description": "تضم أعمالنا مشاريع متنوعة في مجالات مختلفة، منها تصميم الشعارات والهويات البصرية، والحملات الإعلانية الرقمية، وتصميم المحتوى البصري للسوشيال ميديا. كل مشروع هنا يمثل قصة نجاح عملنا عليها بالتعاون مع عملائنا لتحقيق نتائج ملموسة.",
+        "focusAreas": [
+          "تصميم الشعارات والهويات البصرية",
+          "الحملات الإعلانية الرقمية",
+          "تصميم المحتوى البصري للسوشيال ميديا"
+        ]
+      }
+    }
+  ],
+  "home_hero": [
+    {
+      "id": "2a1c7622-24f7-42b0-b4cd-9eeb0c051d63",
+      "contentType": 3,
+      "contentTypeName": "ContactUs",
+      "updatedAt": "2026-05-09T08:46:07.397217Z",
+      "body": {
+        "_meta": {
+          "tabKey": "home-hero",
+          "tabLabel": "هيرو الرئيسية",
+          "sidebarGroup": "الصفحة الرئيسية",
+          "groupOrder": 2,
+          "tabOrder": 1,
+          "sectionKey": "home_hero",
+          "sectionType": "hero",
+          "shared": false,
+          "assignToPages": [
+            "home"
+          ],
+          "sourceContentTypes": [
+            3
+          ]
+        },
+        "headline": {
+          "line1": "وكالة جهور للتسويق الالكتروني",
+          "highlight": "",
+          "line2": "لنجاحك صوت جهور"
+        },
+        "slides": [
+          {
+            "brand": "Safety Brand",
+            "subtitle": "Brand identity and campaign",
+            "alt": "Safety brand visual in orange",
+            "image": "https://gohor.octoserv-comp.com/storage/bcdef0196ac94422ae66a32ae3910528.jpg"
+          },
+          {
+            "brand": "HLR",
+            "subtitle": "Home luxury realestate",
+            "alt": "Luxury real estate brand visual in green",
+            "image": "http://gohor.octoserv-comp.com/storage/0978616b503140fa9533a96712749b10.webp"
+          },
+          {
+            "brand": "Jsr Miemar",
+            "subtitle": "We build to the summit",
+            "alt": "Jsr Miemar bridge visual in red",
+            "image": "http://gohor.octoserv-comp.com/storage/a6f3f065dbef4fdd996ff5655f85c28c.webp"
+          }
+        ]
+      }
+    }
+  ],
+  "works_gallery": [
+    {
+      "id": "eb5be03f-a949-4b7e-b271-a1d9d59e79c1",
+      "contentType": 6,
+      "contentTypeName": "6",
+      "updatedAt": "2026-03-27T13:40:03.883054Z",
+      "body": {
+        "_meta": {
+          "tabKey": "works-gallery",
+          "tabLabel": "معرض الأعمال",
+          "sidebarGroup": "الأقسام المشتركة",
+          "groupOrder": 3,
+          "tabOrder": 3,
+          "sectionKey": "works_gallery",
+          "sectionType": "gallery",
+          "shared": true,
+          "assignToPages": [
+            "home",
+            "services"
+          ],
+          "sourceContentTypes": [
+            3,
+            5
+          ]
+        },
+        "label": "أعمالنا",
+        "title": "أعمال نفتخر بها",
+        "description": "مجموعة مختارة من مشاريعنا التي جمعت بين الإبداع، الاحتراف، وتحقيق النتائج. كل مشروع هنا يروي قصة نجاحٍ صُمّمت بإتقان على يد فريق جهور.",
+        "items": [
+          {
+            "brand": "Jsr Miemar",
+            "subtitle": "Outdoor stand campaign",
+            "alt": "Brand stand posters",
+            "image": "http://gohor.octoserv-comp.com/storage/21771f198cc14456b503efcde5db1123.webp"
+          },
+          {
+            "brand": "Safety Brand",
+            "subtitle": "Product visualization",
+            "alt": "Safety equipment art direction",
+            "image": "http://gohor.octoserv-comp.com/storage/0978616b503140fa9533a96712749b10.webp"
+          },
+          {
+            "brand": "Jsr Miemar",
+            "subtitle": "Uniform and apparel",
+            "alt": "Branded work vest",
+            "image": "http://gohor.octoserv-comp.com/storage/a6f3f065dbef4fdd996ff5655f85c28c.webp"
+          },
+          {
+            "brand": "Safety Brand",
+            "subtitle": "Retail communication",
+            "alt": "Promotional sign collection",
+            "image": "http://gohor.octoserv-comp.com/storage/0978616b503140fa9533a96712749b10.webp"
+          }
+        ]
+      }
+    }
+  ]
+}

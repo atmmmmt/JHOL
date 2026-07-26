@@ -1,0 +1,7 @@
+node_modules/
+.next/
+out/
+dist/
+*.tmp.json
+HybridStorageService.cs
+BACKEND/
