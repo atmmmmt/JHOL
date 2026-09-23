@@ -10,6 +10,7 @@ import AboutStartJourneySection from "../components/sections/about-sections/abou
 import WorkServices from "../components/sections/servies-sections/work-services";
 import WorksContentSections from "../components/sections/works-sections/works-content-sections";
 import WorksHeroSection from "../components/sections/works-sections/works-hero-section";
+import { reviseContentSection } from "../lib/client-content-revision";
 import { useLiveSection } from "../lib/use-live-image";
 
 type WorksPageProps = {
@@ -20,12 +21,17 @@ type WorksPageProps = {
 };
 
 function WorksPage({ hero, pagination, projects, projectsContent: initialProjectsContent }: WorksPageProps) {
-  const projectsContent = useLiveSection("works_projects", initialProjectsContent);
+  const revisedHero = reviseContentSection("works_hero", hero);
+  const revisedProjectsContent = reviseContentSection(
+    "works_projects",
+    initialProjectsContent,
+  );
+  const projectsContent = useLiveSection("works_projects", revisedProjectsContent);
   const liveProjects = projectsContent.projects?.length ? projectsContent.projects : projects;
 
   return (
     <>
-      <WorksHeroSection content={hero} />
+      <WorksHeroSection content={revisedHero} />
       <WorkServices
         detailsButtonLabel={pagination.detailsButton}
         listingDescription={projectsContent.description}
@@ -33,10 +39,10 @@ function WorksPage({ hero, pagination, projects, projectsContent: initialProject
         projects={liveProjects}
         workCategories={projectsContent.workCategories}
       />
-      <WorksContentSections content={hero} />
+      <WorksContentSections content={revisedHero} />
       <AboutStartJourneySection
-        content={hero}
-        journey={hero.ctaSection}
+        content={revisedHero}
+        journey={revisedHero.ctaSection}
         sectionKey="works_hero"
         journeyKey="ctaSection"
       />
