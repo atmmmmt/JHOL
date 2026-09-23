@@ -8,6 +8,7 @@ import AboutStartJourneySection from "../components/sections/about-sections/abou
 import FeaturedServicesSection from "../components/sections/home-sections/view-all-works-section";
 import ServicesExtraSections from "../components/sections/servies-sections/services-extra-sections";
 import ServicesHeroSection from "../components/sections/servies-sections/hero-service-section";
+import { reviseContentSection } from "../lib/client-content-revision";
 
 type ServicesPageProps = {
   featuredServices: FeaturedServicesContent;
@@ -18,14 +19,20 @@ function ServicesPage({
   featuredServices,
   hero,
 }: ServicesPageProps) {
+  const revisedFeaturedServices = reviseContentSection(
+    "featured_services",
+    featuredServices,
+  );
+  const revisedHero = reviseContentSection("services_hero", hero);
+
   return (
     <>
-      <ServicesHeroSection content={hero} />
-      <FeaturedServicesSection content={featuredServices} />
-      <ServicesExtraSections content={hero} />
+      <ServicesHeroSection content={revisedHero} />
+      <FeaturedServicesSection content={revisedFeaturedServices} />
+      <ServicesExtraSections content={revisedHero} />
       <AboutStartJourneySection
-        content={hero}
-        journey={hero.ctaSection}
+        content={revisedHero}
+        journey={revisedHero.ctaSection}
         sectionKey="services_hero"
         journeyKey="ctaSection"
       />
