@@ -11,7 +11,9 @@
     "backfill:background": "node scripts/backfill-content-background.mjs",
     "backfill:page-fields": "node scripts/backfill-content-background.mjs",
     "seed:legal-pages": "node scripts/seed-legal-pages.mjs",
-    "seed:cookies-policy": "node scripts/seed-cookies-policy.mjs"
+    "seed:cookies-policy": "node scripts/seed-cookies-policy.mjs",
+    "migrate:client-revision": "node scripts/apply-client-revision-2026-09-24.mjs",
+    "migrate:client-revision:dry": "node scripts/apply-client-revision-2026-09-24.mjs --dry-run"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
