@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { reviseContentSection } from "./client-content-revision";
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://johor-back.euphoria-motiva.com";
@@ -134,9 +135,15 @@ export function useLiveImage(
  * until the live value resolves (or if it can't be found), so the page
  * renders instantly and swaps in fresh data (including new image URLs)
  * once the client-side fetch completes.
+ *
+ * Client-requested content revisions are applied to both the initial static
+ * payload and every live API refresh. This prevents legacy CMS copy from
+ * reappearing after hydration while the backend data is being migrated.
  */
 export function useLiveSection<T>(sectionKey: string, initialData: T): T {
-  const [data, setData] = useState<T>(initialData);
+  const [data, setData] = useState<T>(() =>
+    reviseContentSection(sectionKey, initialData),
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -148,7 +155,8 @@ export function useLiveSection<T>(sectionKey: string, initialData: T): T {
 
           const section = findSection(entries, sectionKey);
           if (section) {
-            setData(applyLiveSectionOrdering(sectionKey, section) as T);
+            const orderedSection = applyLiveSectionOrdering(sectionKey, section);
+            setData(reviseContentSection(sectionKey, orderedSection) as T);
           }
         })
         .catch(() => undefined);

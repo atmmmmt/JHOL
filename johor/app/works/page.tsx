@@ -2,12 +2,15 @@ import { getSeoDescriptions, getSiteContent } from "../../lib/api";
 import { buildPageMetadata } from "../../lib/seo";
 import WorksPage from "../../src/page-components/works-page";
 
+const WORKS_DESCRIPTION =
+  "حملات جهور الإعلانية: استراتيجيات مدروسة، استهداف دقيق، وتحسين مستمر لتحويل الميزانيات الإعلانية إلى مبيعات وعملاء ونمو قابل للقياس.";
+
 export async function generateMetadata() {
   const [site, seoDescs] = await Promise.all([getSiteContent(), getSeoDescriptions()]);
   const primaryProject = site.pages.works.projects.projects[0];
 
   return buildPageMetadata({
-    description: seoDescs["/works"]?.trim() || site.pages.works.hero.ogDescription?.trim() || site.pages.works.hero.description,
+    description: seoDescs["/works"]?.trim() || WORKS_DESCRIPTION,
     image: primaryProject
       ? {
           alt: primaryProject.title,
@@ -18,7 +21,7 @@ export async function generateMetadata() {
           url: site.global.header.logo.image,
         },
     path: "/works",
-    title: "ملف الأعمال | جهور",
+    title: "الحملات والأعمال | جهور",
   });
 }
 

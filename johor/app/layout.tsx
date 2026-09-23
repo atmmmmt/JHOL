@@ -61,7 +61,7 @@ export default async function RootLayout({
         <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`} height="0" width="0" style={{ display: "none", visibility: "hidden" }} /></noscript>
         <Script id="gtm-init" strategy="afterInteractive">{`
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          new Date().getTime(),event:'gtm.js');var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','${GTM_ID}');
@@ -77,7 +77,7 @@ export default async function RootLayout({
               url: "https://jhoragency.com.sa",
               logo: "https://jhoragency.com.sa/og-logo.webp",
               description:
-                "وكالة جهور للتسويق الالكتروني - نصمّم هويات بصرية احترافية، ننفّذ حملات إعلانية مؤثرة، وننشئ محتوى رقمياً يُحوّل متابعيك إلى عملاء.",
+                "وكالة جهور للتسويق الرقمي وإدارة الحملات الإعلانية الممولة؛ نساعد الشركات على الوصول للجمهور المناسب، تحسين أداء الإعلانات، وتحقيق نتائج قابلة للقياس.",
               sameAs: [
                 "https://www.instagram.com/jhoragency",
                 "https://twitter.com/jhoragency",

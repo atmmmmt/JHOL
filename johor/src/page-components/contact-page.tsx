@@ -6,6 +6,7 @@ import ContactContentSections from "../components/sections/contact-sections/cont
 import ContactDirectInfoSection from "../components/sections/contact-sections/contact-direct-info-section";
 import ContactHeroSection from "../components/sections/contact-sections/contact-hero";
 import FormContact from "../components/sections/contact-sections/form-contact";
+import { reviseContentSection } from "../lib/client-content-revision";
 
 type ContactPageProps = {
   form: ContactFormContent;
@@ -13,15 +14,18 @@ type ContactPageProps = {
 };
 
 function ContactPage({ form, hero }: ContactPageProps) {
+  const revisedForm = reviseContentSection("contact_form", form);
+  const revisedHero = reviseContentSection("contact_hero", hero);
+
   return (
     <>
-      <ContactHeroSection content={hero} />
-      <ContactContentSections content={hero} />
+      <ContactHeroSection content={revisedHero} />
+      <ContactContentSections content={revisedHero} />
       <ContactDirectInfoSection />
-      <FormContact content={form} />
+      <FormContact content={revisedForm} />
       <AboutStartJourneySection
-        content={hero}
-        journey={hero.startToday}
+        content={revisedHero}
+        journey={revisedHero.startToday}
         sectionKey="contact_hero"
         journeyKey="startToday"
       />
