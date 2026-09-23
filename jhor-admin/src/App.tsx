@@ -235,6 +235,15 @@ function App() {
     />
   )
 
+  const seoElement = (
+    <DashboardPage
+      username={authSession.username}
+      onLogout={handleLogout}
+      onOpenCredentials={handleOpenCredentials}
+      seoMode
+    />
+  )
+
   return (
     <>
       <Routes>
@@ -247,6 +256,7 @@ function App() {
         <Route path="/hero" element={heroElement} />
         <Route path="/orders" element={ordersElement} />
         <Route path="/briefs" element={briefsElement} />
+        <Route path="/seo" element={seoElement} />
         <Route path="/content/:contentId" element={dashboardElement} />
         <Route
           path="/content/:contentId/project/:projectId"

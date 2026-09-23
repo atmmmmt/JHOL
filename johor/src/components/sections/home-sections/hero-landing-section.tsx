@@ -5,7 +5,7 @@ import {
   type CSSProperties,
 } from "react";
 import type { HomeHeroContent } from "../../../../lib/api";
-import homeHeroBackground from "../../../assets/images/7.png";
+import homeHeroBackground from "../../../assets/images/7.webp";
 import Container from "../../common/container";
 import { MASK_RADIUS } from "../../common/cursor-mask-constants";
 import { useCursorMask } from "../../common/cursor-mask-context";
@@ -95,12 +95,40 @@ function HeroLandingSection({
     ? highlightCandidate
     : fallbackHighlight;
 
-  const line2Text = content.headline.line2?.trim() || "لنجاحك صوت";
+  // No hardcoded fallback: clearing the tagline in the dashboard must remove it.
+  const line2Text = content.headline.line2?.trim() ?? "";
 
   // Mobile-specific overrides (fallback to desktop if empty)
   const mobLine1Text = mob?.line1?.trim() || line1Text;
   const mobHighlight = mob?.highlight?.trim() || resolvedHighlightText;
   const mobLine2Text = mob?.line2?.trim() || line2Text;
+
+  // Headline alignment, editable from the dashboard.
+  const align = content.align ?? "right";
+  const ALIGN_TEXT = {
+    right: "sm:text-right",
+    center: "sm:text-center",
+    left: "sm:text-left",
+  } as const;
+  const ALIGN_ITEMS = {
+    right: "sm:items-end",
+    center: "sm:items-center",
+    left: "sm:items-start",
+  } as const;
+  const alignText = ALIGN_TEXT[align] ?? ALIGN_TEXT.right;
+  const alignItems = ALIGN_ITEMS[align] ?? ALIGN_ITEMS.right;
+
+  // Headline size, editable from the dashboard (falls back to the design values).
+  const desktopVw = content.fontSize?.desktopVw;
+  const mobilePx = content.fontSize?.mobilePx;
+  const heroFontVars = {
+    ...(desktopVw ? { "--hero-fs-desktop": `${desktopVw}vw` } : {}),
+    ...(mobilePx ? { "--hero-fs-mobile": `${mobilePx}px` } : {}),
+  } as CSSProperties;
+
+  const ctaEnabled = content.cta?.enabled !== false;
+  const ctaLabel = content.cta?.label?.trim() || "ابني علامتك التجارية الان";
+  const ctaHref = content.cta?.href?.trim() || "/packages";
   const mobHighlightIdx = mobLine1Text.indexOf(mobHighlight);
   const mobHasHighlight = mobHighlightIdx >= 0;
   const mobBefore = mobHasHighlight ? mobLine1Text.slice(0, mobHighlightIdx) : mobLine1Text;
@@ -188,11 +216,12 @@ function HeroLandingSection({
                 clearHeroMaskPosition(event.currentTarget);
                 setMaskMode("none");
               }}
-              className={`hero-mask-target relative z-50 w-full max-sm:flex max-sm:flex-col max-sm:items-center max-sm:text-center lg:absolute lg:inset-x-0 lg:top-44 ${
+              className={`hero-mask-target relative z-50 w-full max-sm:flex max-sm:flex-col max-sm:items-center max-sm:text-center lg:absolute lg:inset-x-0 lg:top-44 ${alignText} ${
                 maskEnabled ? "cursor-none" : "cursor-auto"
               }`}
               style={
                 {
+                  ...heroFontVars,
                   "--mask-r":
                     maskEnabled && maskMode === "pageHero"
                       ? `${MASK_RADIUS}px`
@@ -201,7 +230,7 @@ function HeroLandingSection({
               }
             >
               <h1
-                className="font-hero text-[clamp(2rem,8.9vw,4.55rem)] lg:text-[6vw] lg:whitespace-nowrap font-bold leading-[1.1] tracking-[-0.02em] text-white max-sm:text-center max-sm:text-[68px] max-sm:tracking-[-0.02em]"
+                className="font-hero text-[clamp(2rem,8.9vw,4.55rem)] lg:text-[length:var(--hero-fs-desktop,6vw)] lg:whitespace-nowrap font-bold leading-[1.1] tracking-[-0.02em] text-white max-sm:text-center max-sm:text-[length:var(--hero-fs-mobile,68px)] max-sm:tracking-[-0.02em]"
                 style={{
                   lineHeight: "1.08",
                 }}
@@ -276,7 +305,7 @@ function HeroLandingSection({
                   aria-hidden
                 >
                   <h1
-                    className="font-hero text-[clamp(2.15rem,8.9vw,4.55rem)] lg:text-[6vw] lg:whitespace-nowrap font-bold leading-[1.08] tracking-[-0.02em] text-(--primary-shades-02) max-sm:text-center max-sm:text-[44px] max-sm:tracking-normal"
+                    className="font-hero text-[clamp(2.15rem,8.9vw,4.55rem)] lg:text-[length:var(--hero-fs-desktop,6vw)] lg:whitespace-nowrap font-bold leading-[1.08] tracking-[-0.02em] text-(--primary-shades-02) max-sm:text-center max-sm:text-[44px] max-sm:tracking-normal"
                     style={{
                       color: "var(--primary-shades-02)",
                       lineHeight: "1.08",
@@ -319,23 +348,27 @@ function HeroLandingSection({
                 </div>
               ) : null}
 
-              <div className="mt-14 sm:mt-10 flex flex-col items-center gap-12 sm:gap-14">
-                <p className="font-hero font-normal text-[clamp(1.4rem,5.5vw,3rem)] leading-[1.22] text-white/90 max-sm:text-[40px] max-sm:text-center sm:whitespace-nowrap">
-                  <span className="sm:hidden">{mobLine2Text}</span>
-                  <span className="hidden sm:inline">{line2Text}</span>
-                </p>
+              <div className={`mt-14 sm:mt-10 flex flex-col items-center gap-12 sm:gap-14 ${alignItems}`}>
+                {line2Text || mobLine2Text ? (
+                  <p className="font-hero font-normal text-[clamp(1.4rem,5.5vw,3rem)] leading-[1.22] text-white/90 max-sm:text-[40px] max-sm:text-center sm:whitespace-nowrap">
+                    <span className="sm:hidden">{mobLine2Text}</span>
+                    <span className="hidden sm:inline">{line2Text}</span>
+                  </p>
+                ) : null}
 
-                <a
-                  href="/packages"
-                  className="inline-flex min-h-[3.5rem] items-center gap-3 rounded-full bg-(--secondary-shades-08) px-6 py-3 text-[17px] font-bold leading-tight whitespace-nowrap text-white shadow-[0_14px_36px_rgba(238,32,77,0.45)] transition hover:brightness-110 active:scale-95"
-                >
-                  <span>ابني علامتك التجارية الان</span>
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/20">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                      <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                    </svg>
-                  </span>
-                </a>
+                {ctaEnabled ? (
+                  <a
+                    href={ctaHref}
+                    className="inline-flex min-h-[3.5rem] items-center gap-3 rounded-full bg-(--secondary-shades-08) px-6 py-3 text-[17px] font-bold leading-tight whitespace-nowrap text-white shadow-[0_14px_36px_rgba(238,32,77,0.45)] transition hover:brightness-110 active:scale-95"
+                  >
+                    <span>{ctaLabel}</span>
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/20">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                      </svg>
+                    </span>
+                  </a>
+                ) : null}
               </div>
             </div>
           </div>

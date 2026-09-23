@@ -1,5 +1,5 @@
 import type { PackageDetail } from "../../../data/package-details";
-import packagesHeroBackground from "../../../assets/images/9.png";
+import packagesHeroBackground from "../../../assets/images/9.webp";
 import PageHeroSection from "../shared/page-hero-section";
 
 type PackageDetailHeroSectionProps = {

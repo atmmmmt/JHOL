@@ -1,12 +1,12 @@
-import { getSiteContent } from "../../lib/api";
+import { getSeoDescriptions, getSiteContent } from "../../lib/api";
 import { buildPageMetadata } from "../../lib/seo";
 import TrainingCoursesPage from "../../src/page-components/training-courses-page";
 
 export async function generateMetadata() {
-  const site = await getSiteContent();
+  const [site, seoDescs] = await Promise.all([getSiteContent(), getSeoDescriptions()]);
 
   return buildPageMetadata({
-    description: site.pages.trainingCourses.hero.description,
+    description: seoDescs["/training-courses"]?.trim() || site.pages.trainingCourses.hero.ogDescription?.trim() || site.pages.trainingCourses.hero.description,
     image: {
       alt: site.global.header.logo.alt,
       url: site.global.header.logo.image,

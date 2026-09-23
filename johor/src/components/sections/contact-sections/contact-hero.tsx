@@ -1,5 +1,5 @@
 import type { ContactHeroContent } from "../../../../lib/api";
-import contactHeroBackground from "../../../assets/images/9.png";
+import contactHeroBackground from "../../../assets/images/9.webp";
 import { useLiveImage } from "../../../lib/use-live-image";
 import PageHeroSection from "../shared/page-hero-section";
 

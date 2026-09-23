@@ -1,38 +1,18 @@
 Options -MultiViews -Indexes
-DirectoryIndex index.html
+DirectoryIndex _seo.php index.html
 RewriteEngine On
 
 # Force HTTPS
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-# Serve root homepage
-RewriteRule ^$ /index.html [L]
-
-# Serve existing files directly
+# Serve static assets directly (CSS, JS, images, fonts, etc.) — skip PHP
 RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} !\.(php)$ [NC]
 RewriteRule ^ - [L]
 
-# Try exact pagename.html (handles /page and /page/)
-RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}.html -f
-RewriteRule ^(.+?)/?$ $1.html [L]
-
-# Try stripping trailing slash then pagename.html
-RewriteCond %{REQUEST_URI} ^(.+)/$
-RewriteCond %{DOCUMENT_ROOT}/%1.html -f
-RewriteRule ^(.+)/$ $1.html [L]
-
-# Detail routes for content added after the last build (works/blog/packages):
-# no static .html exists yet, so serve the pre-built fallback template. It
-# resolves the real slug on the client and fetches the content live from the API.
-RewriteRule ^brief/[^/]+/?$ /brief/__shell__.html [L]
-RewriteRule ^works/[^/]+/?$ /works/__fallback__.html [L]
-RewriteRule ^blog/[^/]+/?$ /blog/__fallback__.html [L]
-RewriteRule ^packages/[^/]+/[^/]+/?$ /packages/__fallback__/__fallback__.html [L]
-RewriteRule ^packages/[^/]+/?$ /packages/__fallback__.html [L]
-
-# 404 fallback
-RewriteRule ^ /404.html [L]
+# Route all page requests through the SEO proxy (injects og:description from API)
+RewriteRule ^ /_seo.php [L]
 
 # Do not cache HTML entry files. This prevents mobile browsers from holding
 # onto an old exported page shell after a new deploy.

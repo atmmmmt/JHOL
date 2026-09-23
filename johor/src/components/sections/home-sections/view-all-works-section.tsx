@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useMemo, useRef, useState, useCallback } from "react";
 import type { FeaturedServicesContent } from "../../../../lib/api";
-import cloudAsset from "../../../assets/images/Cloud.png";
+import cloudAsset from "../../../assets/images/Cloud.webp";
 import { cn } from "../../../lib/cn";
 import { fadeUp } from "../../../lib/motion";
 import CtaLinkButton from "../../common/cta-link-button";

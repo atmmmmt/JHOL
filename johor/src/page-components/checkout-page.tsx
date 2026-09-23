@@ -26,11 +26,14 @@ declare global {
 
 const MOYASAR_PUBLISHABLE_KEY = "pk_test_RdS1ybBA6P6ydNPm8ZGPaTBQikh5HX4vpsHHoPun";
 
-function OrderItem({ item, onRemove }: { item: CartItem; onRemove: (id: string) => void }) {
+function OrderItem({ item, onRemove, cartMode }: { item: CartItem; onRemove: (id: string) => void; cartMode?: "split" | "full" }) {
   const typeLabel = item.packageType === "identity"
     ? { text: "هوية بصرية - 60% مقدماً", color: "bg-(--primary-shades-04)/14 text-(--primary-shades-04)" }
     : item.packageType === "campaign"
-    ? { text: "حملة ممولة - دفعة واحدة", color: "bg-emerald-500/12 text-emerald-700" }
+    // When the overall cart is split-mode (due to identity packages), don't claim "دفعة واحدة"
+    ? cartMode === "split"
+      ? { text: "حملة ممولة", color: "bg-emerald-500/12 text-emerald-700" }
+      : { text: "حملة ممولة - دفعة واحدة", color: "bg-emerald-500/12 text-emerald-700" }
     : null;
 
   return (
@@ -87,6 +90,7 @@ export default function CheckoutPageClient() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [formError, setFormError] = useState("");
   const [infoConfirmed, setInfoConfirmed] = useState(false);
+  const [paymentChoice, setPaymentChoice] = useState<"split" | "full">("split");
   const moyasarMounted = useRef(false);
   const [form, setForm] = useState({
     firstName: "",
@@ -111,6 +115,15 @@ export default function CheckoutPageClient() {
     () => (totalSAR !== null ? computePaymentSplit(cartItems, totalSAR) : null),
     [cartItems, totalSAR],
   );
+
+  // effectiveSplit respects the customer's upfront-payment choice
+  const effectiveSplit = useMemo(() => {
+    if (!split) return null;
+    if (split.mode === "split" && paymentChoice === "full") {
+      return { mode: "full" as const, amountDueNow: totalSAR ?? 0, amountDueLater: 0 };
+    }
+    return split;
+  }, [split, paymentChoice, totalSAR]);
 
   const totalDisplay = totalSAR !== null
     ? `${totalSAR.toLocaleString("en-US")} SAR`
@@ -152,7 +165,7 @@ export default function CheckoutPageClient() {
   const totalRef = useRef(totalSAR);
   useEffect(() => { formRef.current = form; }, [form]);
   useEffect(() => { cartRef.current = cartItems; }, [cartItems]);
-  useEffect(() => { splitRef.current = split; }, [split]);
+  useEffect(() => { splitRef.current = effectiveSplit; }, [effectiveSplit]);
   useEffect(() => { totalRef.current = totalSAR; }, [totalSAR]);
 
   const initMoyasar = useCallback(() => {
@@ -264,7 +277,7 @@ export default function CheckoutPageClient() {
   return (
     <>
       <section
-        className="relative overflow-hidden bg-(--white-shades-01) pb-fluid-7 pt-[calc(var(--header-overlay-offset)+var(--space-fluid-7))]"
+        className="relative overflow-hidden bg-(--white-shades-01) pb-fluid-7 pt-[calc(var(--header-overlay-offset)+var(--space-fluid-7)+3rem)]"
         dir="rtl"
       >
         <div className="pointer-events-none absolute inset-0">
@@ -492,7 +505,7 @@ export default function CheckoutPageClient() {
                 {cartItems.length > 0 ? (
                   <div className="space-y-2.5">
                     {cartItems.map((item) => (
-                      <OrderItem key={item.id} item={item} onRemove={removeCartItem} />
+                      <OrderItem key={item.id} item={item} onRemove={removeCartItem} cartMode={split?.mode} />
                     ))}
                   </div>
                 ) : (
@@ -523,22 +536,54 @@ export default function CheckoutPageClient() {
                       <span className="font-semibold text-white" dir="ltr">{totalDisplay}</span>
                     </div>
                   )}
-                  {split && split.mode === "split" && (
-                    <>
-                      <div className="mt-1 rounded-xl bg-white/8 px-3 py-2.5 text-fluid-xs space-y-1.5">
-                        <p className="font-semibold text-white/80">نظام الدفع المرحلي</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-white/55">الدفعة الأولى (60%)</span>
-                          <span className="font-bold text-white" dir="ltr">{split.amountDueNow.toLocaleString("en-US")} SAR</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-white/55">الدفعة الثانية (40%)</span>
-                          <span className="font-semibold text-white/70" dir="ltr">{split.amountDueLater.toLocaleString("en-US")} SAR</span>
-                        </div>
-                      </div>
-                    </>
+
+                  {/* Payment mode toggle — only shown when cart has identity packages */}
+                  {split?.mode === "split" && !infoConfirmed && (
+                    <div className="mt-1 rounded-xl bg-white/8 px-3 py-3 text-fluid-xs space-y-2">
+                      <p className="font-semibold text-white/80">طريقة الدفع</p>
+                      <label className="flex cursor-pointer items-center gap-2.5">
+                        <input
+                          type="radio"
+                          name="paymentChoice"
+                          value="split"
+                          checked={paymentChoice === "split"}
+                          onChange={() => setPaymentChoice("split")}
+                          className="accent-(--secondary-shades-08)"
+                        />
+                        <span className="text-white/75">
+                          60% الآن ({split.amountDueNow.toLocaleString("en-US")} SAR) + 40% عند التسليم
+                        </span>
+                      </label>
+                      <label className="flex cursor-pointer items-center gap-2.5">
+                        <input
+                          type="radio"
+                          name="paymentChoice"
+                          value="full"
+                          checked={paymentChoice === "full"}
+                          onChange={() => setPaymentChoice("full")}
+                          className="accent-(--secondary-shades-08)"
+                        />
+                        <span className="text-white/75">
+                          دفع المبلغ كاملاً ({totalDisplay})
+                        </span>
+                      </label>
+                    </div>
                   )}
-                  {split && split.mode === "full" && totalDisplay && (
+
+                  {effectiveSplit && effectiveSplit.mode === "split" && (
+                    <div className="mt-1 rounded-xl bg-white/8 px-3 py-2.5 text-fluid-xs space-y-1.5">
+                      <p className="font-semibold text-white/80">نظام الدفع المرحلي</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-white/55">الدفعة الأولى (60%)</span>
+                        <span className="font-bold text-white" dir="ltr">{effectiveSplit.amountDueNow.toLocaleString("en-US")} SAR</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-white/55">الدفعة الثانية (40%)</span>
+                        <span className="font-semibold text-white/70" dir="ltr">{effectiveSplit.amountDueLater.toLocaleString("en-US")} SAR</span>
+                      </div>
+                    </div>
+                  )}
+                  {effectiveSplit && effectiveSplit.mode === "full" && totalDisplay && (
                     <div className="flex items-center justify-between border-t border-white/12 pt-2">
                       <span className="text-white/60">المبلغ المستحق الآن</span>
                       <span className="text-base font-bold text-white" dir="ltr">{totalDisplay}</span>
@@ -595,18 +640,18 @@ export default function CheckoutPageClient() {
                       : "bg-white/14 text-white/30 cursor-not-allowed",
                   ].join(" ")}
                 >
-                  {split?.mode === "split" && split.amountDueNow
-                    ? `دفع ${split.amountDueNow.toLocaleString("en-US")} SAR - الدفعة الأولى`
-                    : split?.amountDueNow
-                    ? `دفع ${split.amountDueNow.toLocaleString("en-US")} SAR وإتمام الطلب`
+                  {effectiveSplit?.mode === "split" && effectiveSplit.amountDueNow
+                    ? `دفع ${effectiveSplit.amountDueNow.toLocaleString("en-US")} SAR - الدفعة الأولى`
+                    : effectiveSplit?.amountDueNow
+                    ? `دفع ${effectiveSplit.amountDueNow.toLocaleString("en-US")} SAR وإتمام الطلب`
                     : "متابعة للدفع"}
                 </button>
 
-                {split?.mode === "split" && (
+                {effectiveSplit?.mode === "split" && (
                   <div className="mt-3 rounded-xl bg-white/8 px-3 py-2.5 text-fluid-xs">
                     <p className="font-semibold text-white/80">أنت تدفع الدفعة الأولى</p>
                     <p className="mt-0.5 text-white/55">
-                      الدفعة الثانية ({split.amountDueLater.toLocaleString("en-US")} SAR) تُسدَّد عند تسليم الهوية البصرية.
+                      الدفعة الثانية ({effectiveSplit.amountDueLater.toLocaleString("en-US")} SAR) تُسدَّد عند تسليم الهوية البصرية.
                     </p>
                   </div>
                 )}

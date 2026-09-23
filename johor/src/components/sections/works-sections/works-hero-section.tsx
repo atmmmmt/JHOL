@@ -1,5 +1,5 @@
 import type { WorksHeroContent } from '../../../../lib/api'
-import worksHeroBackground from '../../../assets/images/8.png'
+import worksHeroBackground from '../../../assets/images/8.webp'
 import { useLiveImage } from '../../../lib/use-live-image'
 import PageHeroSection from '../shared/page-hero-section'
 

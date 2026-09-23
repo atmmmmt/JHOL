@@ -346,19 +346,21 @@ function PackageTierDetailSection({ detail, tier }: PackageTierDetailSectionProp
               })}
             </div>
 
-            <div className="mt-4 flex flex-wrap justify-center gap-2.5 [direction:rtl]">
+            <div className="mt-4 grid grid-cols-2 gap-2.5 [direction:rtl]">
               <CtaSubmitButton
                 type="button"
                 label="أضف إلى السلة"
                 surface="dark"
-                buttonClassName="cursor-pointer"
+                buttonClassName="cursor-pointer w-full"
+                shellClassName="w-full justify-between !text-xs sm:!text-fluid-sm"
                 onClick={handleAddToCart}
               />
               <CtaSubmitButton
                 type="button"
                 label="شراء مباشر"
                 surface="light"
-                buttonClassName="cursor-pointer"
+                buttonClassName="cursor-pointer w-full"
+                shellClassName="w-full justify-between !text-xs sm:!text-fluid-sm"
                 onClick={handleDirectBuy}
               />
             </div>

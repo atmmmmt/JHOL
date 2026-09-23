@@ -1,13 +1,13 @@
-import { getSiteContent } from "../../lib/api";
+import { getSeoDescriptions, getSiteContent } from "../../lib/api";
 import { buildPageMetadata } from "../../lib/seo";
 import ServicesPage from "../../src/page-components/services-page";
 
 export async function generateMetadata() {
-  const site = await getSiteContent();
+  const [site, seoDescs] = await Promise.all([getSiteContent(), getSeoDescriptions()]);
   const primaryProject = site.pages.works.projects.projects[0];
 
   return buildPageMetadata({
-    description: site.pages.services.hero.description,
+    description: seoDescs["/services"]?.trim() || site.pages.services.hero.ogDescription?.trim() || site.pages.services.hero.description,
     image: primaryProject
       ? {
           alt: primaryProject.title,

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import type { BrandStoryContent } from "../../../../lib/api";
-import loudVoiceBaseImage from "../../../assets/images/success.png";
+import loudVoiceBaseImage from "../../../assets/images/success.webp";
 import { fadeUp } from "../../../lib/motion";
 import Container from "../../common/container";
 import { useLiveImage } from "../../../lib/use-live-image";

@@ -1,6 +1,7 @@
 import {
   DETAIL_FALLBACK_SLUG,
   getBlogPostBySlug,
+  getSeoDescriptions,
   getSiteContent,
 } from "../../../lib/api";
 import { buildPageMetadata } from "../../../lib/seo";
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: BlogDetailRouteProps) {
   }
 
   try {
-    const post = await getBlogPostBySlug(slug);
+    const [post, seoDescs] = await Promise.all([getBlogPostBySlug(slug), getSeoDescriptions()]);
 
     if (!post) {
       return buildPageMetadata({
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: BlogDetailRouteProps) {
     }
 
     return buildPageMetadata({
-      description: post.excerpt,
+      description: seoDescs[`/blog/${slug}`]?.trim() || post.ogDescription?.trim() || post.excerpt,
       image: post.coverImage
         ? {
             alt: post.title,

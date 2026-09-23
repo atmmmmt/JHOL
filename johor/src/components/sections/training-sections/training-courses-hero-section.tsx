@@ -1,5 +1,5 @@
 import type { PageHeroContent } from "../../../../lib/api";
-import trainingHeroBackground from "../../../assets/images/1.png";
+import trainingHeroBackground from "../../../assets/images/1.webp";
 import { useLiveImage } from "../../../lib/use-live-image";
 import PageHeroSection from "../shared/page-hero-section";
 

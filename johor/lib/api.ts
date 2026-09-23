@@ -2,7 +2,7 @@ import { cache } from "react";
 
 export const SITE_NAME = "جهور";
 export const DEFAULT_SITE_DESCRIPTION =
-  "وكالة جهور للتسويق الالكتروني - نصمّم هويات بصرية احترافية، ننفّذ حملات إعلانية مؤثرة، وننشئ محتوى رقمياً يُحوّل متابعيك إلى عملاء. لنجاحك صوت جهور.";
+  "وكالة جهور - نصمّم هويات بصرية احترافية، ننفّذ حملات إعلانية مؤثرة، وننشئ محتوى رقمياً يُحوّل متابعيك إلى عملاء.";
 
 export const API_BASE_URL =
   process.env.CONTENT_API_BASE_URL ??
@@ -216,6 +216,16 @@ export type HomeHeroContent = {
     highlight?: string;
     line2?: string;
   };
+  align?: "right" | "center" | "left";
+  fontSize?: {
+    desktopVw?: number;
+    mobilePx?: number;
+  };
+  cta?: {
+    enabled?: boolean;
+    label?: string;
+    href?: string;
+  };
   background?: string;
   mobileBackground?: string;
   slides: HomeHeroSlide[];
@@ -286,6 +296,7 @@ export type PageHeroContent = {
   lines: string[];
   description: string;
   supportText: string;
+  ogDescription?: string;
   background?: string;
   mobileBackground?: string;
 };
@@ -464,12 +475,27 @@ export type TrainingCoursesOverviewContent = {
   cta: string;
 };
 
+/**
+ * How much of the row a media block takes. Blocks flow in a wrapping row, so
+ * two consecutive "half" blocks sit side by side and three "third" blocks form
+ * a triptych — the Behance-style case-study layout — without the dashboard
+ * having to model rows explicitly.
+ */
+export type WorkStoryBlockWidth = "full" | "half" | "third";
+
+export const WORK_STORY_BLOCK_WIDTHS: WorkStoryBlockWidth[] = [
+  "full",
+  "half",
+  "third",
+];
+
 export type WorkStoryBlock = {
   id: string;
   title: string;
   description: string;
   image: string;
   video?: string;
+  width?: WorkStoryBlockWidth;
 };
 
 export type WorkProject = {
@@ -482,9 +508,14 @@ export type WorkProject = {
   listingDescription: string;
   overview: string;
   supportText: string;
+  ogDescription?: string;
   coverImage: string;
+  /** Gap between gallery media, in px. Falls back to DEFAULT_GALLERY_GAP. */
+  galleryGap?: number;
   storyBlocks: WorkStoryBlock[];
 };
+
+export const DEFAULT_GALLERY_GAP = 16;
 
 export type WorksProjectsContent = {
   label?: string;
@@ -509,6 +540,7 @@ export type BlogPreviewItem = {
   coverImage: string;
   content: string;
   excerpt: string;
+  ogDescription?: string;
   link?: string;
   meta: string;
   publishDate?: string;
@@ -664,16 +696,34 @@ function normalizeGalleryItem<T extends { image: string }>(item: T): T {
   };
 }
 
+function normalizeStoryBlockWidth(value: unknown): WorkStoryBlockWidth {
+  const candidate = typeof value === "string" ? value.trim().toLowerCase() : "";
+  return (WORK_STORY_BLOCK_WIDTHS as string[]).includes(candidate)
+    ? (candidate as WorkStoryBlockWidth)
+    : "full";
+}
+
+function normalizeGalleryGap(value: unknown): number {
+  // The dashboard stores this as free text, so it can arrive as "24", 24, or junk.
+  const parsed = typeof value === "number" ? value : Number.parseFloat(String(value ?? ""));
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return DEFAULT_GALLERY_GAP;
+  }
+  return Math.min(parsed, 120);
+}
+
 function normalizeWorkProject(project: WorkProject, index: number): WorkProject {
   return {
     ...project,
     id: project.id || `${project.slug}-${index + 1}`,
     coverImage: normalizeImageUrl(project.coverImage),
+    galleryGap: normalizeGalleryGap(project.galleryGap),
     storyBlocks: project.storyBlocks.map((block, blockIndex) => ({
       ...block,
       id: block.id || `${project.slug}-story-${blockIndex + 1}`,
       image: normalizeImageUrl(block.image),
       video: typeof (block as { video?: unknown }).video === 'string' ? (block as { video?: string }).video : undefined,
+      width: normalizeStoryBlockWidth((block as { width?: unknown }).width),
     })),
   };
 }
@@ -1159,6 +1209,36 @@ export async function getSiteContentFresh(): Promise<SiteContent> {
   const entries = await fetchContentEntriesFresh();
   return buildSiteContent(entries);
 }
+
+export type SeoDescriptions = Record<string, string>;
+
+export const getSeoDescriptions = cache(async (): Promise<SeoDescriptions> => {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const response = await fetch(
+      new URL("/api/content/type/9996", API_BASE_URL),
+      {
+        cache: "force-cache",
+        headers: { accept: "application/json" },
+        signal: controller.signal,
+      }
+    );
+    clearTimeout(timeoutId);
+    if (!response.ok) return {};
+    const data = (await response.json()) as ContentEntry | ContentEntry[];
+    const entry = Array.isArray(data) ? data[0] : data;
+    if (!entry) return {};
+    const raw =
+      typeof entry.jsonContent === "string"
+        ? (JSON.parse(entry.jsonContent) as unknown)
+        : entry.jsonContent;
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+    return raw as SeoDescriptions;
+  } catch {
+    return {};
+  }
+});
 
 /**
  * Client-safe fetch of the full site content. Unlike {@link getSiteContent} this

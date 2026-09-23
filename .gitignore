@@ -5,3 +5,7 @@ dist/
 *.tmp.json
 HybridStorageService.cs
 BACKEND/
+.claude/
+.codex-tmp/
+JHOR-Source-Delivery.zip
+JHOR-Project-Handover.pdf

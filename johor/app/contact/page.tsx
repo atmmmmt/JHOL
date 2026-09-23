@@ -1,12 +1,12 @@
-import { getSiteContent } from "../../lib/api";
+import { getSeoDescriptions, getSiteContent } from "../../lib/api";
 import { buildPageMetadata } from "../../lib/seo";
 import ContactPage from "../../src/page-components/contact-page";
 
 export async function generateMetadata() {
-  const site = await getSiteContent();
+  const [site, seoDescs] = await Promise.all([getSiteContent(), getSeoDescriptions()]);
 
   return buildPageMetadata({
-    description: site.pages.contact.hero.description,
+    description: seoDescs["/contact"]?.trim() || site.pages.contact.hero.ogDescription?.trim() || site.pages.contact.hero.description,
     image: {
       alt: site.global.header.logo.alt,
       url: site.global.header.logo.image,

@@ -187,6 +187,7 @@ const textareaFieldHints = [
   'note',
   'paragraph',
   'headline',
+  'ogDescription',
 ]
 
 const imageFieldKeys = new Set([
@@ -403,6 +404,54 @@ function looksLikeImageSource(value: string) {
   return /^(https?:\/\/|\/)/.test(value)
 }
 
+/**
+ * Width options for a project story block. These mirror the frontend layout:
+ * blocks flow in a wrapping row, so two "نصف" blocks land side by side and
+ * three "ثلث" blocks form a row of three.
+ */
+const storyBlockWidthOptions: Array<{ value: string; label: string; hint: string }> = [
+  { value: 'full', label: 'عرض كامل', hint: 'صورة واحدة بعرض الصفحة' },
+  { value: 'half', label: 'نصف العرض', hint: 'صورتان جنب بعض' },
+  { value: 'third', label: 'ثلث العرض', hint: 'ثلاث صور بصف واحد' },
+]
+
+function StoryBlockWidthPicker({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (next: string) => void
+}) {
+  const current = storyBlockWidthOptions.some((option) => option.value === value)
+    ? value
+    : 'full'
+
+  return (
+    <div className="flex flex-wrap gap-2" dir="rtl">
+      {storyBlockWidthOptions.map((option) => {
+        const selected = option.value === current
+        return (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => onChange(option.value)}
+            title={option.hint}
+            className="rounded-xl border px-3 py-1.5 text-sm transition"
+            style={{
+              borderColor: selected ? 'var(--brand-teal)' : 'var(--brand-border)',
+              background: selected ? 'rgba(29,171,137,0.15)' : 'transparent',
+              color: selected ? 'var(--brand-teal)' : 'var(--brand-subtle)',
+            }}
+          >
+            {selected ? '✓ ' : ''}
+            {option.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 function normalizeComparableText(value: string) {
   return value.trim().toLocaleLowerCase('ar')
 }
@@ -552,6 +601,7 @@ function buildDefaultStoryBlockItem(): JsonValue {
     description: '',
     image: '',
     video: '',
+    width: 'full',
   } as JsonValue
 }
 
@@ -575,7 +625,9 @@ function buildDefaultProjectItem(template?: JsonValue): JsonValue {
     listingDescription: '',
     overview: '',
     supportText: '',
+    ogDescription: '',
     coverImage: '',
+    galleryGap: 16,
     storyBlocks: [buildDefaultStoryBlockItem()],
   } as JsonValue
 }
@@ -642,6 +694,7 @@ function buildDefaultBlogItem(template?: JsonValue): JsonValue {
     categoryIds: [],
     publishDate: getTodayIsoDate(),
     excerpt: '',
+    ogDescription: '',
     tags: '',
     coverImage: '',
     content: '<p></p>',
@@ -2234,6 +2287,7 @@ function PrimitiveEditor({
   const isHtmlField = isHtmlFieldKey(fieldKey)
   const isVideoField = isVideoFieldKey(fieldKey)
   const isCategoryField = fieldKey === 'category'
+  const isWidthField = fieldKey === 'width'
   const showImagePreview = isImageField && looksLikeImageSource(value)
   const [videoUploading, setVideoUploading] = useState(false)
 
@@ -2295,6 +2349,8 @@ function PrimitiveEditor({
             onChange={(nextValue) => onChange(nextValue)}
             onRequestImage={onOpenImageManager}
           />
+        ) : isWidthField ? (
+          <StoryBlockWidthPicker value={value} onChange={onChange} />
         ) : isCategoryField && categoryChoices.length > 0 ? (
           <div className="flex flex-wrap gap-2" dir="rtl">
             {categoryChoices.map((option) => {
@@ -2443,6 +2499,7 @@ function EnhancedPrimitiveEditor({
   const isHtmlField = isHtmlFieldKey(fieldKey)
   const isVideoField = isVideoFieldKey(fieldKey)
   const isCategoryField = fieldKey === 'category'
+  const isWidthField = fieldKey === 'width'
   const showImagePreview = isImageField && looksLikeImageSource(value)
   const [videoUploading, setVideoUploading] = useState(false)
   const [videoUploadProgress, setVideoUploadProgress] = useState(0)
@@ -2624,6 +2681,8 @@ function EnhancedPrimitiveEditor({
               </div>
             ) : null}
           </div>
+        ) : isWidthField ? (
+          <StoryBlockWidthPicker value={value} onChange={onChange} />
         ) : isCategoryField && categoryChoices.length > 0 ? (
           <div className="flex flex-wrap gap-2" dir="rtl">
             {categoryChoices.map((option) => {
@@ -4316,11 +4375,17 @@ export function ContentDetailPanel({
             path={[...collectionConfig.itemPath, activeCollectionIndex!]}
             value={
               isBlogPreviewSection && isRecord(activeCollectionValue)
-                  ? {
-                      ...activeCollectionValue,
-                      ...(!Object.prototype.hasOwnProperty.call(activeCollectionValue, 'tags') ? { tags: '' } : {}),
-                    }
-                  : activeCollectionValue
+                ? {
+                    ...activeCollectionValue,
+                    ...(!Object.prototype.hasOwnProperty.call(activeCollectionValue, 'tags') ? { tags: '' } : {}),
+                    ...(!Object.prototype.hasOwnProperty.call(activeCollectionValue, 'ogDescription') ? { ogDescription: '' } : {}),
+                  }
+                : isWorksProjectsSection && isRecord(activeCollectionValue)
+                ? {
+                    ...activeCollectionValue,
+                    ...(!Object.prototype.hasOwnProperty.call(activeCollectionValue, 'ogDescription') ? { ogDescription: '' } : {}),
+                  }
+                : activeCollectionValue
             }
             categoryOptions={effectiveCategoryOptions}
             onCreateBlogCategoryAndSelect={handleCreateBlogCategoryAndSelect}

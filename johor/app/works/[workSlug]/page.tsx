@@ -1,6 +1,7 @@
 import {
   DETAIL_FALLBACK_SLUG,
   getAdjacentWorkProjects,
+  getSeoDescriptions,
   getSiteContent,
   getWorkProjectBySlug,
 } from "../../../lib/api";
@@ -80,7 +81,7 @@ export async function generateMetadata({ params }: WorkDetailPageProps) {
     });
   }
 
-  const project = await getWorkProjectBySlug(workSlug);
+  const [project, seoDescs] = await Promise.all([getWorkProjectBySlug(workSlug), getSeoDescriptions()]);
 
   if (!project) {
     return buildPageMetadata({
@@ -89,7 +90,7 @@ export async function generateMetadata({ params }: WorkDetailPageProps) {
     });
   }
 
-  const description = resolveWorkMetadataDescription(project);
+  const description = seoDescs[`/works/${workSlug}`]?.trim() || project.ogDescription?.trim() || resolveWorkMetadataDescription(project);
   const imageUrl = resolveWorkMetadataImage(project);
 
   return buildPageMetadata({

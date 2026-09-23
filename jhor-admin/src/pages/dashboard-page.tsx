@@ -6,6 +6,7 @@ import { DashboardShell } from '../components/dashboard-shell'
 import { ErrorBoundary } from '../components/error-boundary'
 import { OrdersPage } from './orders-page'
 import { BriefsPage } from './briefs-page'
+import { SeoPage } from './seo-page'
 import { PackagesEditorPage } from './packages-editor-page'
 import { SectorsEditorPage } from './sectors-editor-page'
 import { SliderCardsEditorPage } from './slider-cards-editor-page'
@@ -40,6 +41,7 @@ interface DashboardPageProps {
   heroMode?: boolean
   ordersMode?: boolean
   briefsMode?: boolean
+  seoMode?: boolean
   authToken?: string
 }
 
@@ -922,10 +924,25 @@ const BRIEFS_SIDEBAR_ITEM: SidebarItem = {
   sidebarTitle: 'البريفات',
 }
 
+const SEO_SIDEBAR_ITEM: SidebarItem = {
+  ...SPECIAL_SIDEBAR_BASE,
+  id: 'special:seo',
+  sidebarId: 'special:seo',
+  routePath: '/seo',
+  sidebarTitle: 'وصف المشاركة (SEO)',
+}
+
 const SPECIAL_SECTION_KEYS = new Set(['home_sectors', 'home_slider_cards', 'home_hero'])
 
+const SEO_SIDEBAR_GROUP: SidebarGroup = {
+  key: 'seo',
+  title: 'إعدادات الموقع',
+  groupOrder: -1,
+  items: [SEO_SIDEBAR_ITEM],
+}
+
 function buildDashboardSidebarGroups(groups: SidebarGroup[]): SidebarGroup[] {
-  return groups.map((group) => {
+  const mapped = groups.map((group) => {
     const filteredItems = group.items.filter(
       (item) => !SPECIAL_SECTION_KEYS.has(item.meta?.sectionKey ?? ''),
     )
@@ -942,6 +959,7 @@ function buildDashboardSidebarGroups(groups: SidebarGroup[]): SidebarGroup[] {
       items: extraItems.length > 0 ? [...expandedItems, ...extraItems] : expandedItems,
     }
   })
+  return [SEO_SIDEBAR_GROUP, ...mapped]
 }
 
 export function DashboardPage({
@@ -956,6 +974,7 @@ export function DashboardPage({
   heroMode = false,
   ordersMode = false,
   briefsMode = false,
+  seoMode = false,
   authToken = '',
 }: DashboardPageProps) {
   const navigate = useNavigate()
@@ -1023,12 +1042,12 @@ export function DashboardPage({
   }, [])
 
   useEffect(() => {
-    if (catalog.status !== 'success' || catalog.items.length === 0 || contentId || settingsMode || videosMode || packagesMode || sectorsMode || sliderCardsMode || heroMode || ordersMode || briefsMode) {
+    if (catalog.status !== 'success' || catalog.items.length === 0 || contentId || settingsMode || videosMode || packagesMode || sectorsMode || sliderCardsMode || heroMode || ordersMode || briefsMode || seoMode) {
       return
     }
 
     navigate(`/content/${catalog.items[0].id}`, { replace: true })
-  }, [catalog.status, catalog.items.length, contentId, navigate, settingsMode, videosMode, packagesMode, sectorsMode, sliderCardsMode, heroMode, ordersMode, briefsMode])
+  }, [catalog.status, catalog.items.length, contentId, navigate, settingsMode, videosMode, packagesMode, sectorsMode, sliderCardsMode, heroMode, ordersMode, briefsMode, seoMode])
 
   useEffect(() => {
     const targetContentId = contentId
@@ -1104,6 +1123,8 @@ export function DashboardPage({
     ? 'special:orders'
     : location.pathname === '/briefs'
     ? 'special:briefs'
+    : location.pathname === '/seo'
+    ? 'special:seo'
     : contentId
       ? packageId !== undefined
         ? `content:${contentId}:package:${packageId}`
@@ -1401,6 +1422,8 @@ export function DashboardPage({
         <OrdersPage token={authToken} />
       ) : briefsMode ? (
         <BriefsPage token={authToken} />
+      ) : seoMode ? (
+        <SeoPage />
       ) : videosMode ? (
         <VideoManagerPage
           packagesShowcaseItem={packagesShowcaseItem}

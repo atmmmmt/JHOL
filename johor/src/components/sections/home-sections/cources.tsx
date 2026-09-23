@@ -221,7 +221,7 @@ function PackageCard({ item, index }: { item: PackageCardItem; index: number }) 
                 surface={item.surface}
                 dotClassName={accent.dot}
                 linkClassName="w-full sm:w-auto"
-                shellClassName="w-full sm:w-auto"
+                shellClassName="w-full justify-center sm:w-auto sm:justify-start"
               />
             </motion.div>
           </div>

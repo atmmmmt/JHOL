@@ -554,6 +554,53 @@ export const getCheckoutTerms = () => getCheckoutText(CHECKOUT_TERMS_CONTENT_TYP
 export const updateCheckoutPrivacy = (text: CheckoutLegalText) => updateCheckoutText(CHECKOUT_PRIVACY_CONTENT_TYPE, text)
 export const updateCheckoutTerms = (text: CheckoutLegalText) => updateCheckoutText(CHECKOUT_TERMS_CONTENT_TYPE, text)
 
+// ─── SEO Descriptions ────────────────────────────────────────────────────────
+const SEO_DESCRIPTIONS_CONTENT_TYPE = 9996
+
+export type SeoDescriptions = Record<string, string>
+
+export async function getSeoDescriptions(): Promise<SeoDescriptions> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/content/type/${SEO_DESCRIPTIONS_CONTENT_TYPE}`, {
+      headers: { accept: 'application/json' },
+    })
+    if (!response.ok) return {}
+    const data = await response.json() as { jsonContent: unknown }
+    const content = typeof data.jsonContent === 'string'
+      ? JSON.parse(data.jsonContent)
+      : data.jsonContent
+    return (content as SeoDescriptions) ?? {}
+  } catch {
+    return {}
+  }
+}
+
+export async function updateSeoDescriptions(descriptions: SeoDescriptions): Promise<void> {
+  const listResponse = await fetch(`${API_BASE_URL}/api/content`, {
+    headers: createRequestHeaders(),
+  })
+  await ensureAuthorizedResponse(listResponse, 'فشل جلب المحتوى')
+  const all = await listResponse.json() as Array<{ id: string; contentType: number }>
+  const existing = all.find(item => item.contentType === SEO_DESCRIPTIONS_CONTENT_TYPE)
+  const body = JSON.stringify({ contentType: SEO_DESCRIPTIONS_CONTENT_TYPE, jsonContent: descriptions })
+
+  if (existing) {
+    const res = await fetch(`${API_BASE_URL}/api/content/${existing.id}`, {
+      method: 'PUT',
+      headers: createRequestHeaders({ 'content-type': 'application/json' }),
+      body,
+    })
+    await ensureAuthorizedResponse(res, 'فشل تحديث وصف SEO')
+  } else {
+    const res = await fetch(`${API_BASE_URL}/api/content`, {
+      method: 'POST',
+      headers: createRequestHeaders({ 'content-type': 'application/json' }),
+      body,
+    })
+    await ensureAuthorizedResponse(res, 'فشل حفظ وصف SEO')
+  }
+}
+
 export async function login(
   credentials: AuthCredentials,
 ): Promise<AuthSession> {

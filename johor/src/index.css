@@ -343,3 +343,14 @@ canvas {
 .legal-content li {
   margin: 0.35rem 0;
 }
+
+/* Entrance for the project media lightbox. Kept as plain CSS so the overlay's
+   mount/unmount never depends on a JS animation loop completing. */
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

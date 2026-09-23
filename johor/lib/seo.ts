@@ -16,7 +16,7 @@ export const DEFAULT_METADATA_KEYWORDS = [
 
 export const DEFAULT_SOCIAL_IMAGE = {
   alt: SITE_NAME,
-  url: "/og-logo.webp",
+  url: "/OG.png",
 } as const;
 
 type MetadataImage = {

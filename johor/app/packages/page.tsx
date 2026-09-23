@@ -1,4 +1,5 @@
 import {
+  getSeoDescriptions,
   getSiteContent,
   type PackagesShowcaseContent,
   type PageHeroContent,
@@ -42,10 +43,10 @@ async function getPackagesPageContent() {
 }
 
 export async function generateMetadata() {
-  const content = await getPackagesPageContent();
+  const [content, seoDescs] = await Promise.all([getPackagesPageContent(), getSeoDescriptions()]);
 
   return buildPageMetadata({
-    description: content.hero.description,
+    description: seoDescs["/packages"]?.trim() || content.hero.ogDescription?.trim() || content.hero.description,
     path: "/packages",
     title: "الباقات | جهور",
   });

@@ -910,15 +910,17 @@ function CartSidebar({
                   </a>
                 </div>
                 <div onClick={onClose}>
-                  <CtaLinkButton
+                  <a
                     href="/packages"
-                    label="إضافة باقات أخرى"
-                    surface="dark"
-                    hoverMatchDot
-                    truncateLabel={false}
-                    linkClassName="w-full"
-                    shellClassName="w-full justify-between"
-                  />
+                    className="flex w-full items-center justify-center gap-2.5 rounded-full bg-(--primary-shades-02) px-5 py-3 text-fluid-sm font-bold text-white transition hover:brightness-110 active:scale-95"
+                  >
+                    <span>إضافة باقات أخرى</span>
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-white/20">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                      </svg>
+                    </span>
+                  </a>
                 </div>
               </div>
             </div>

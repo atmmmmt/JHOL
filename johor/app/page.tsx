@@ -1,24 +1,18 @@
-import { getSiteContent, SITE_NAME } from "../lib/api";
+import { DEFAULT_SITE_DESCRIPTION, getSeoDescriptions, getSiteContent, SITE_NAME } from "../lib/api";
 import { buildPageMetadata } from "../lib/seo";
 import HomePage from "../src/page-components/home-page";
 
 export async function generateMetadata() {
-  const site = await getSiteContent();
-  const primaryImage = site.pages.home.hero.slides[0];
+  const [, seoDescs] = await Promise.all([getSiteContent(), getSeoDescriptions()]);
 
   return buildPageMetadata({
-    description: site.pages.home.hero.headline.line2,
-    image: primaryImage
-      ? {
-          alt: primaryImage.alt,
-          url: primaryImage.image,
-        }
-      : {
-          alt: site.global.header.logo.alt,
-          url: site.global.header.logo.image,
-        },
+    description: seoDescs["/"]?.trim() || DEFAULT_SITE_DESCRIPTION,
+    image: {
+      alt: SITE_NAME,
+      url: "/OG.png",
+    },
     path: "/",
-    title: SITE_NAME,
+    title: "وكالة جهور للتسويق الالكتروني | لنجاحك صوت جهور",
   });
 }
 

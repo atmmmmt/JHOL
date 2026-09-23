@@ -3,14 +3,28 @@ import { fetchContentList, fetchContentDetail, updateContentDetail } from '../li
 import type { JsonValue } from '../types/content'
 
 type HeroHeadline = { line1: string; highlight: string; line2: string }
+type HeroCta = { enabled: boolean; label: string; href: string }
+type HeroFontSize = { desktopVw: number; mobilePx: number }
+type HeroAlign = 'right' | 'center' | 'left'
+const HERO_ALIGNS: { value: HeroAlign; label: string }[] = [
+  { value: 'right', label: 'يمين' },
+  { value: 'center', label: 'وسط' },
+  { value: 'left', label: 'يسار' },
+]
 type HeroBody = {
   headline: HeroHeadline
   mobileHeadline: { line1: string; highlight: string; line2: string }
+  cta: HeroCta
+  fontSize: HeroFontSize
+  align: HeroAlign
 }
 
 const DEFAULT: HeroBody = {
   headline: { line1: 'وكالة جهور للتسويق الالكتروني', highlight: 'جهور', line2: 'لنجاحك صوت جهور' },
   mobileHeadline: { line1: '', highlight: '', line2: '' },
+  cta: { enabled: true, label: 'ابني علامتك التجارية الان', href: '/packages' },
+  fontSize: { desktopVw: 6, mobilePx: 68 },
+  align: 'right',
 }
 
 function parseBody(raw: JsonValue): HeroBody {
@@ -18,7 +32,22 @@ function parseBody(raw: JsonValue): HeroBody {
   const r = raw as Record<string, JsonValue>
   const h = (r.headline as Record<string, JsonValue>) ?? {}
   const m = (r.mobileHeadline as Record<string, JsonValue>) ?? {}
+  const c = (r.cta as Record<string, JsonValue>) ?? {}
+  const f = (r.fontSize as Record<string, JsonValue>) ?? {}
+  const rawAlign = r.align
   return {
+    align: rawAlign === 'right' || rawAlign === 'center' || rawAlign === 'left'
+      ? rawAlign
+      : DEFAULT.align,
+    fontSize: {
+      desktopVw: typeof f.desktopVw === 'number' ? f.desktopVw : DEFAULT.fontSize.desktopVw,
+      mobilePx:  typeof f.mobilePx  === 'number' ? f.mobilePx  : DEFAULT.fontSize.mobilePx,
+    },
+    cta: {
+      enabled: typeof c.enabled === 'boolean' ? c.enabled : DEFAULT.cta.enabled,
+      label:   typeof c.label   === 'string'  ? c.label   : DEFAULT.cta.label,
+      href:    typeof c.href    === 'string'  ? c.href    : DEFAULT.cta.href,
+    },
     headline: {
       line1:     typeof h.line1     === 'string' ? h.line1     : DEFAULT.headline.line1,
       highlight: typeof h.highlight === 'string' ? h.highlight : DEFAULT.headline.highlight,
@@ -80,12 +109,16 @@ export function HeroEditorPage() {
         ...fullBody,
         headline: data.headline as unknown as JsonValue,
         mobileHeadline: data.mobileHeadline as unknown as JsonValue,
+        cta: data.cta as unknown as JsonValue,
+        fontSize: data.fontSize as unknown as JsonValue,
+        align: data.align as unknown as JsonValue,
       }
       await updateContentDetail(contentId, {
         contentType,
         body: mergedBody,
       })
       setFullBody(mergedBody)
+
       setMsg({ text: 'تم الحفظ بنجاح.', ok: true })
     } catch (err) {
       setMsg({ text: `تعذر الحفظ: ${String(err)}`, ok: false })
@@ -150,6 +183,69 @@ export function HeroEditorPage() {
           <input className={inputCls} value={data.mobileHeadline.line2}
             onChange={e => setMobile('line2', e.target.value)}
             placeholder="اتركه فارغاً لاستخدام نص الديسكتوب" />
+        </div>
+      </div>
+
+      {/* Headline font size */}
+      <div className="rounded-2xl border border-[rgba(160,149,208,0.16)] bg-[linear-gradient(145deg,rgba(34,27,79,0.4),rgba(11,9,32,0.6))] p-5 space-y-4">
+        <h3 className="text-sm font-semibold text-[var(--brand-violet)]">حجم خط العنوان</h3>
+        <div>
+          <label className={labelCls}>
+            الديسكتوب / اللابتوب — {data.fontSize.desktopVw}vw (الافتراضي 6)
+          </label>
+          <input type="range" min={2} max={10} step={0.25} className="w-full accent-[var(--brand-teal)]"
+            value={data.fontSize.desktopVw}
+            onChange={e => setData(p => ({ ...p, fontSize: { ...p.fontSize, desktopVw: Number(e.target.value) } }))} />
+          <p className="mt-1 text-[11px] text-[var(--brand-subtle)]">الحجم نسبي لعرض الشاشة، فيتناسق على كل المقاسات.</p>
+        </div>
+        <div>
+          <label className={labelCls}>
+            الموبايل — {data.fontSize.mobilePx}px (الافتراضي 68)
+          </label>
+          <input type="range" min={24} max={90} step={1} className="w-full accent-[var(--brand-coral)]"
+            value={data.fontSize.mobilePx}
+            onChange={e => setData(p => ({ ...p, fontSize: { ...p.fontSize, mobilePx: Number(e.target.value) } }))} />
+        </div>
+      </div>
+
+      {/* Headline alignment */}
+      <div className="rounded-2xl border border-[rgba(29,171,137,0.22)] bg-[linear-gradient(145deg,rgba(34,27,79,0.4),rgba(11,9,32,0.6))] p-5 space-y-3">
+        <h3 className="text-sm font-semibold text-[var(--brand-teal)]">محاذاة العنوان</h3>
+        <p className="text-[11px] text-[var(--brand-subtle)]">على الموبايل يبقى العنوان في الوسط دائماً.</p>
+        <div className="flex gap-2">
+          {HERO_ALIGNS.map(opt => (
+            <button key={opt.value} type="button"
+              onClick={() => setData(p => ({ ...p, align: opt.value }))}
+              className={`flex-1 rounded-xl border px-4 py-2.5 text-sm font-medium transition ${
+                data.align === opt.value
+                  ? 'border-[rgba(29,171,137,0.5)] bg-[rgba(29,171,137,0.15)] text-[var(--brand-teal)]'
+                  : 'border-[rgba(160,149,208,0.2)] bg-[rgba(255,255,255,0.05)] text-[var(--brand-subtle)]'
+              }`}>
+              {data.align === opt.value ? '✓ ' : ''}{opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA button */}
+      <div className="rounded-2xl border border-[rgba(29,171,137,0.22)] bg-[linear-gradient(145deg,rgba(34,27,79,0.4),rgba(11,9,32,0.6))] p-5 space-y-4">
+        <h3 className="text-sm font-semibold text-[var(--brand-teal)]">زر الهيرو (CTA)</h3>
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-[var(--brand-text)]">
+          <input type="checkbox" checked={data.cta.enabled}
+            onChange={e => setData(p => ({ ...p, cta: { ...p.cta, enabled: e.target.checked } }))} />
+          إظهار الزر في الصفحة الرئيسية
+        </label>
+        <div>
+          <label className={labelCls}>نص الزر</label>
+          <input className={inputCls} value={data.cta.label} disabled={!data.cta.enabled}
+            onChange={e => setData(p => ({ ...p, cta: { ...p.cta, label: e.target.value } }))}
+            placeholder="ابني علامتك التجارية الان" />
+        </div>
+        <div>
+          <label className={labelCls}>رابط الزر</label>
+          <input className={inputCls} value={data.cta.href} disabled={!data.cta.enabled} dir="ltr"
+            onChange={e => setData(p => ({ ...p, cta: { ...p.cta, href: e.target.value } }))}
+            placeholder="/packages" />
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 ﻿import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
+import { Fragment } from "react";
 import Image from "next/image";
 import {
   useState,
@@ -106,7 +107,7 @@ function FooterLogoColumn({
       >
         مؤسسة جهور للتسويق الإلكتروني
         <br />
-        الرقم الموحد 7034418165
+        <a href="tel:7034418165" className="hover:underline">الرقم الموحد 7034418165</a>
       </p>
 
       <PartnerBadges
@@ -252,14 +253,23 @@ function FooterContactInfo({
             isLight ? "bg-white/35" : "bg-(--secondary-shades-08)/40",
           )}
         />
-        <span
-          className={cn(
-            "text-fluid-sm",
-            isLight ? "text-white/90" : "text-(--secondary-shades-08)",
-          )}
-          dir="ltr"
-        >
-          {FOOTER_PHONE_NUMBERS.join(" | ")}
+        <span className="flex items-center gap-1 text-fluid-sm" dir="ltr">
+          {FOOTER_PHONE_NUMBERS.map((num, i) => (
+            <Fragment key={num}>
+              <a
+                href={`tel:${num.replace(/\s/g, "")}`}
+                className={cn(
+                  "hover:underline",
+                  isLight ? "text-white/90" : "text-(--secondary-shades-08)",
+                )}
+              >
+                {num}
+              </a>
+              {i < FOOTER_PHONE_NUMBERS.length - 1 && (
+                <span className={isLight ? "text-white/90" : "text-(--secondary-shades-08)"}> | </span>
+              )}
+            </Fragment>
+          ))}
         </span>
       </li>
 

@@ -334,7 +334,6 @@ function WorkServices({
                           />
                         </motion.div>
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))]" />
-                        <div className="absolute inset-4 border border-dashed border-white/12 sm:inset-6" />
                       </motion.div>
 
                       <h2

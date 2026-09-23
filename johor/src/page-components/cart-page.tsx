@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShoppingCart, Trash2 } from "lucide-react";
+import { ArrowUpLeft, ShoppingCart, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import CtaLinkButton from "../components/common/cta-link-button";
 import Container from "../components/common/container";
@@ -222,27 +223,25 @@ function CartPage() {
                 عند المتابعة سيتم تجهيز الطلب بناءً على العناصر الموجودة في السلة.
               </p>
 
-              <div className="mt-4 space-y-2.5">
+              <div className="mt-4 flex gap-2.5">
                 <a
                   href={contactHref}
-                  className="flex w-full items-center justify-between rounded-full bg-(--secondary-shades-08) px-5 py-3 text-fluid-sm font-bold text-white shadow-[0_8px_24px_rgba(238,32,77,0.35)] transition hover:brightness-110 active:scale-95"
+                  className="flex flex-1 items-center justify-between rounded-full bg-(--secondary-shades-08) px-4 py-3 text-fluid-sm font-bold text-white shadow-[0_8px_24px_rgba(238,32,77,0.35)] transition hover:brightness-110 active:scale-95"
                 >
                   <span>إتمام الطلب</span>
                   <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-white/20">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                      <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                    </svg>
+                    <ArrowUpLeft className="h-3.5 w-3.5" />
                   </span>
                 </a>
-                <CtaLinkButton
+                <Link
                   href="/packages"
-                  label="إضافة باقات أخرى"
-                  surface="light"
-                  hoverMatchDot
-                  truncateLabel={false}
-                  linkClassName="w-full"
-                  shellClassName="w-full justify-between"
-                />
+                  className="flex flex-1 items-center justify-between rounded-full bg-white/10 px-4 py-3 text-fluid-sm font-bold text-white transition hover:brightness-110 active:scale-95"
+                >
+                  <span>إضافة باقات</span>
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-white/20">
+                    <ArrowUpLeft className="h-3.5 w-3.5" />
+                  </span>
+                </Link>
               </div>
             </motion.aside>
           </div>

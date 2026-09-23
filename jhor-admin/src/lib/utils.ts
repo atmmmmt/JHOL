@@ -162,6 +162,10 @@ const arabicFieldLabelMap: Record<string, string> = {
   ctaHref: 'رابط الزر',
   serviceLines: 'سطور الخدمات',
   tickerItems: 'عبارات الشريط المتحرك',
+  width: 'عرض الصورة',
+  galleryGap: 'المسافة بين الصور (بكسل)',
+  ogDescription: 'وصف المشاركة (يظهر عند مشاركة الرابط)',
+  video: 'الفيديو',
 }
 
 export function titleizeFieldLabel(value: string) {

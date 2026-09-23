@@ -1,5 +1,5 @@
 import type { BlogHeroContent } from "../../../../lib/api";
-import blogHeroBackground from "../../../assets/images/3.png";
+import blogHeroBackground from "../../../assets/images/3.webp";
 import { useLiveImage } from "../../../lib/use-live-image";
 import PageHeroSection from "../shared/page-hero-section";
 

@@ -51,19 +51,8 @@ function App({ chrome, children }: AppProps) {
       return;
     }
 
-    if (previousPathnameRef.current === pathname) {
-      return;
-    }
-
+    // Intro video plays once per visit; returning to "/" skips it.
     previousPathnameRef.current = pathname;
-
-    const frameId = window.requestAnimationFrame(() => {
-      setShowLoader(true);
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-    };
   }, [hasBooted, pathname]);
 
   const handleLoaderComplete = () => {
@@ -79,12 +68,16 @@ function App({ chrome, children }: AppProps) {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    // Native scrolling is smoother and cheaper on touch devices.
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      return;
+    }
+
     const lenis = new Lenis({
       anchors: true,
       autoRaf: true,
       lerp: 0.08,
       smoothWheel: true,
-      syncTouch: true,
       touchMultiplier: 1,
       wheelMultiplier: 0.9,
     });
