@@ -22,7 +22,7 @@ import SectorsSection from "../components/sections/home-sections/sectors-section
 import StatisticsSection from "../components/sections/home-sections/statistics-section";
 import FeaturedServicesSection from "../components/sections/home-sections/view-all-works-section";
 import TrainingCoursesOverviewSection from "../components/sections/training-sections/training-courses-overview-section";
-
+import { reviseContentSection } from "../lib/client-content-revision";
 
 type HomePageProps = {
   brandStory: BrandStoryContent;
@@ -47,6 +47,17 @@ function HomePage({
   statistics,
   trainingCoursesOverview,
 }: HomePageProps) {
+  const revisedBrandStory = reviseContentSection("brand_story", brandStory);
+  const revisedContactForm = reviseContentSection("contact_form", contactForm);
+  const revisedFeaturedServices = reviseContentSection(
+    "featured_services",
+    featuredServices,
+  );
+  const revisedTrainingOverview = reviseContentSection(
+    "training_courses_overview",
+    trainingCoursesOverview,
+  );
+
   return (
     <>
       <HeroLandingSection content={hero} />
@@ -65,14 +76,14 @@ function HomePage({
         </a>
       </div>
       <SectorsSection />
-      <BlendStatementSection content={brandStory} />
-      <FeaturedServicesSection content={featuredServices} />
+      <BlendStatementSection content={revisedBrandStory} />
+      <FeaturedServicesSection content={revisedFeaturedServices} />
       <Courses content={packagesShowcase} />
       <StatisticsSection content={statistics} />
-      <TrainingCoursesOverviewSection content={trainingCoursesOverview} />
+      <TrainingCoursesOverviewSection content={revisedTrainingOverview} />
       <BrandLogosSection content={partnersLogos} />
       <FeedbackSection content={feedback} />
-      <FormContact content={contactForm} />
+      <FormContact content={revisedContactForm} />
     </>
   );
 }
