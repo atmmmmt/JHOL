@@ -5,6 +5,7 @@ import AboutStartJourneySection from "../components/sections/about-sections/abou
 import BlogContentSections from "../components/sections/blog-sections/blog-content-sections";
 import BlogHeroSection from "../components/sections/blog-sections/blog-hero-section";
 import BlogPreviewSection from "../components/sections/blog-sections/blog-preview-section";
+import { reviseContentSection } from "../lib/client-content-revision";
 
 type BlogPageProps = {
   hero: BlogHeroContent;
@@ -12,14 +13,17 @@ type BlogPageProps = {
 };
 
 function BlogPage({ hero, preview }: BlogPageProps) {
+  const revisedHero = reviseContentSection("blog_hero", hero);
+  const revisedPreview = reviseContentSection("blog_preview", preview);
+
   return (
     <>
-      <BlogHeroSection content={hero} />
-      <BlogPreviewSection content={preview} />
-      <BlogContentSections content={hero} />
+      <BlogHeroSection content={revisedHero} />
+      <BlogPreviewSection content={revisedPreview} />
+      <BlogContentSections content={revisedHero} />
       <AboutStartJourneySection
-        content={hero}
-        journey={hero.helpCta}
+        content={revisedHero}
+        journey={revisedHero.helpCta}
         sectionKey="blog_hero"
         journeyKey="helpCta"
       />
