@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
-import { DEFAULT_SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./api";
+import { SITE_NAME, SITE_URL } from "./api";
 
 export const DEFAULT_METADATA_KEYWORDS = [
   "جهور",
   "Johor",
-  "وكالة إبداعية",
-  "وكالة تسويق",
-  "هوية بصرية",
-  "تصميم مواقع",
-  "حلول رقمية",
-  "إنتاج محتوى",
-  "Branding Agency",
-  "Marketing Agency",
+  "وكالة تسويق رقمي",
+  "حملات إعلانية",
+  "إدارة الحملات الإعلانية",
+  "إعلانات ممولة",
+  "تسويق رقمي",
+  "زيادة المبيعات",
+  "تحسين الإعلانات",
+  "تسجيل العلامات التجارية",
+  "Digital Marketing Agency",
+  "Paid Ads Agency",
+  "Performance Marketing",
 ] as const;
+
+const CAMPAIGN_SITE_DESCRIPTION =
+  "وكالة جهور للتسويق الرقمي وإدارة الحملات الإعلانية الممولة؛ نساعد الشركات على الوصول للجمهور المناسب، تحسين أداء الإعلانات، وتحقيق نتائج قابلة للقياس.";
 
 export const DEFAULT_SOCIAL_IMAGE = {
   alt: SITE_NAME,
@@ -78,11 +84,11 @@ export function buildDefaultMetadata(): Metadata {
       canonical: homeUrl ?? "/",
     },
     creator: SITE_NAME,
-    description: DEFAULT_SITE_DESCRIPTION,
+    description: CAMPAIGN_SITE_DESCRIPTION,
     keywords: [...DEFAULT_METADATA_KEYWORDS],
     metadataBase: getMetadataBase(),
     openGraph: {
-      description: DEFAULT_SITE_DESCRIPTION,
+      description: CAMPAIGN_SITE_DESCRIPTION,
       images: [
         {
           alt: DEFAULT_SOCIAL_IMAGE.alt,
@@ -101,7 +107,7 @@ export function buildDefaultMetadata(): Metadata {
     title: "وكالة جهور للتسويق الالكتروني | لنجاحك صوت جهور",
     twitter: {
       card: "summary_large_image",
-      description: DEFAULT_SITE_DESCRIPTION,
+      description: CAMPAIGN_SITE_DESCRIPTION,
       images: [defaultImageUrl],
       title: "وكالة جهور للتسويق الالكتروني - لنجاحك صوت جهور",
     },
@@ -109,7 +115,7 @@ export function buildDefaultMetadata(): Metadata {
 }
 
 export function buildPageMetadata({
-  description = DEFAULT_SITE_DESCRIPTION,
+  description = CAMPAIGN_SITE_DESCRIPTION,
   image,
   keywords = [...DEFAULT_METADATA_KEYWORDS],
   noIndex = false,
