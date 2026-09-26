@@ -6,6 +6,7 @@ import BlogContentSections from "../components/sections/blog-sections/blog-conte
 import BlogHeroSection from "../components/sections/blog-sections/blog-hero-section";
 import BlogPreviewSection from "../components/sections/blog-sections/blog-preview-section";
 import { reviseContentSection } from "../lib/client-content-revision";
+import { applyFinalClientFixes } from "../lib/final-client-fixes";
 
 type BlogPageProps = {
   hero: BlogHeroContent;
@@ -13,7 +14,10 @@ type BlogPageProps = {
 };
 
 function BlogPage({ hero, preview }: BlogPageProps) {
-  const revisedHero = reviseContentSection("blog_hero", hero);
+  const revisedHero = applyFinalClientFixes(
+    "blog_hero",
+    reviseContentSection("blog_hero", hero),
+  );
   const revisedPreview = reviseContentSection("blog_preview", preview);
 
   return (
