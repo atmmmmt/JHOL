@@ -1,5 +1,10 @@
 import { DETAIL_FALLBACK_SLUG, getSiteContent } from "../../../../lib/api";
 import {
+  filterActivePackageDetails,
+  isArchivedPackageDetail,
+  isArchivedPackageRoute,
+} from "../../../../lib/package-archive";
+import {
   findPackageDetail,
   findTier,
   resolvePackageDetailsForTierRoute,
@@ -37,7 +42,6 @@ function getPackageRouteAliases(path: string, fallbackId: string) {
 
   if (fallbackId.trim()) {
     aliases.add(fallbackId.trim());
-    // Add known pretty slug for this package id
     const prettySlug = PACKAGE_SLUG_MAP[fallbackId.trim()];
     if (prettySlug) aliases.add(prettySlug);
   }
@@ -60,7 +64,7 @@ async function getResolvedPackageDetails() {
 
 export async function generateStaticParams() {
   const details = await getResolvedPackageDetails();
-  const params = details.flatMap((entry) =>
+  const params = filterActivePackageDetails(details).flatMap((entry) =>
     getPackageRouteAliases(entry.path, entry.id).flatMap((packageId) =>
       (entry.saleTiers ?? []).map((tier) => ({
         packageId,
@@ -69,8 +73,8 @@ export async function generateStaticParams() {
     ),
   );
 
-  // Always emit a fallback template so routes for tiers added after this
-  // build can still be served (see johor/public/.htaccess).
+  // Always emit a fallback template so active tiers added after this build can
+  // still be served. Archived identity-package tiers are intentionally omitted.
   return [
     ...params,
     { packageId: DETAIL_FALLBACK_SLUG, tierId: DETAIL_FALLBACK_SLUG },
@@ -80,7 +84,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PackageTierDetailRouteProps) {
   const { packageId, tierId } = await params;
 
-  if (packageId === DETAIL_FALLBACK_SLUG || tierId === DETAIL_FALLBACK_SLUG) {
+  if (
+    packageId === DETAIL_FALLBACK_SLUG ||
+    tierId === DETAIL_FALLBACK_SLUG ||
+    isArchivedPackageRoute(packageId)
+  ) {
     return buildPageMetadata({
       noIndex: true,
       path: `/packages/${packageId}/${tierId}`,
@@ -92,8 +100,9 @@ export async function generateMetadata({ params }: PackageTierDetailRouteProps) 
   const detail = findPackageDetail(details, packageId);
   const tier = findTier(detail, tierId);
 
-  if (!detail || !tier) {
+  if (!detail || isArchivedPackageDetail(detail) || !tier) {
     return buildPageMetadata({
+      noIndex: true,
       path: `/packages/${packageId}/${tierId}`,
       title: "الباقات | جهور",
     });

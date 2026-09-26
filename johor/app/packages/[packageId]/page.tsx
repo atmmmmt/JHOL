@@ -1,5 +1,10 @@
 import { DETAIL_FALLBACK_SLUG, getSiteContent } from "../../../lib/api";
 import {
+  filterActivePackageDetails,
+  isArchivedPackageDetail,
+  isArchivedPackageRoute,
+} from "../../../lib/package-archive";
+import {
   findPackageDetail,
   resolvePackageDetails,
   resolvePackageOgImage,
@@ -63,21 +68,25 @@ async function getResolvedPackageDetails() {
 
 export async function generateStaticParams() {
   const { details } = await getResolvedPackageDetails();
-  const params = details.flatMap((entry) =>
+  const params = filterActivePackageDetails(details).flatMap((entry) =>
     getPackageRouteAliases(entry.path, entry.id).map((packageId) => ({
       packageId,
     })),
   );
 
-  // Always emit a fallback template so routes for packages added after this
-  // build can still be served (see johor/public/.htaccess).
+  // Always emit a fallback template so active packages added after this build
+  // can still be served (see johor/public/.htaccess). Archived packages are
+  // intentionally omitted from generated routes.
   return [...params, { packageId: DETAIL_FALLBACK_SLUG }];
 }
 
 export async function generateMetadata({ params }: PackageDetailRouteProps) {
   const { packageId } = await params;
 
-  if (packageId === DETAIL_FALLBACK_SLUG) {
+  if (
+    packageId === DETAIL_FALLBACK_SLUG ||
+    isArchivedPackageRoute(packageId)
+  ) {
     return buildPageMetadata({
       noIndex: true,
       path: `/packages/${packageId}`,
@@ -88,8 +97,9 @@ export async function generateMetadata({ params }: PackageDetailRouteProps) {
   const { details, logo } = await getResolvedPackageDetails();
   const detail = findPackageDetail(details, packageId);
 
-  if (!detail) {
+  if (!detail || isArchivedPackageDetail(detail)) {
     return buildPageMetadata({
+      noIndex: true,
       path: `/packages/${packageId}`,
       title: "الباقات | جهور",
     });
