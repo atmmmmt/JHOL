@@ -6,6 +6,10 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
+# Archived identity packages stay preserved in the code/CMS but are not public.
+# Temporary redirect makes re-activation later straightforward.
+RewriteRule ^packages/(?:package-2|identity-packages)(?:/.*)?$ /packages [R=302,L,NE]
+
 # Serve static assets directly (CSS, JS, images, fonts, etc.) — skip PHP
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteCond %{REQUEST_URI} !\.(php)$ [NC]
