@@ -23,6 +23,7 @@ import StatisticsSection from "../components/sections/home-sections/statistics-s
 import FeaturedServicesSection from "../components/sections/home-sections/view-all-works-section";
 import TrainingCoursesOverviewSection from "../components/sections/training-sections/training-courses-overview-section";
 import { reviseContentSection } from "../lib/client-content-revision";
+import { applyFinalClientFixes } from "../lib/final-client-fixes";
 
 type HomePageProps = {
   brandStory: BrandStoryContent;
@@ -47,11 +48,14 @@ function HomePage({
   statistics,
   trainingCoursesOverview,
 }: HomePageProps) {
-  const revisedBrandStory = reviseContentSection("brand_story", brandStory);
+  const revisedBrandStory = applyFinalClientFixes(
+    "brand_story",
+    reviseContentSection("brand_story", brandStory),
+  );
   const revisedContactForm = reviseContentSection("contact_form", contactForm);
-  const revisedFeaturedServices = reviseContentSection(
+  const revisedFeaturedServices = applyFinalClientFixes(
     "featured_services",
-    featuredServices,
+    reviseContentSection("featured_services", featuredServices),
   );
   const revisedTrainingOverview = reviseContentSection(
     "training_courses_overview",
