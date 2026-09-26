@@ -36,8 +36,8 @@ function isIdentityPackageTitle(value: unknown) {
 
 /**
  * Packages archived from the public website remain fully preserved in the CMS
- * and static package data. Re-activating them only requires removing their
- * archive key here (or setting `archived: false` once the CMS exposes it).
+ * and static package data. Re-activating them later only requires removing the
+ * package from the archive lists here and the matching temporary redirect.
  */
 export function isArchivedPackageReference(
   reference: PackageArchiveReference | null | undefined,
