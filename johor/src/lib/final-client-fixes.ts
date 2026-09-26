@@ -3,8 +3,10 @@ import type {
   BrandStoryContent,
   ContactHeroContent,
   FeaturedServicesContent,
+  PackagesShowcaseContent,
   WorksGalleryContent,
 } from "../../lib/api";
+import { isArchivedPackageReference } from "../../lib/package-archive";
 
 const HOME_WORKS_DESCRIPTION =
   "مجموعة مختارة من حملاتنا الإعلانية التي تحولت من مجرد إنفاق إلى نتائج.\nاستراتيجيات مدروسة، استهداف دقيق، وتحسين مستمر للحملات بهدف الوصول إلى الجمهور المناسب وتحقيق المزيد من المبيعات والعملاء والنمو.";
@@ -76,6 +78,37 @@ function fixFeaturedServices(
   };
 }
 
+type PackageDetailReference = {
+  archived?: boolean;
+  id?: string;
+  path?: string;
+  title?: string;
+  [key: string]: unknown;
+};
+
+type PackagesShowcaseWithDetails = PackagesShowcaseContent & {
+  packageDetails?: PackageDetailReference[];
+};
+
+function fixPackagesShowcase(
+  content: PackagesShowcaseContent,
+): PackagesShowcaseContent {
+  const extended = content as PackagesShowcaseWithDetails;
+  const packageDetails = Array.isArray(extended.packageDetails)
+    ? extended.packageDetails.filter(
+        (detail) => !isArchivedPackageReference(detail),
+      )
+    : undefined;
+
+  return {
+    ...content,
+    items: (content.items ?? []).filter(
+      (item) => !isArchivedPackageReference({ title: item.title }),
+    ),
+    ...(packageDetails ? { packageDetails } : {}),
+  } as PackagesShowcaseContent;
+}
+
 function fixContactHero(content: ContactHeroContent): ContactHeroContent {
   let replaced = false;
   const lines = (content.lines ?? []).map((line) => {
@@ -112,6 +145,8 @@ export function applyFinalClientFixes<T>(sectionKey: string, content: T): T {
       return fixBrandStory(content as BrandStoryContent) as T;
     case "featured_services":
       return fixFeaturedServices(content as FeaturedServicesContent) as T;
+    case "packages_showcase":
+      return fixPackagesShowcase(content as PackagesShowcaseContent) as T;
     case "contact_hero":
       return fixContactHero(content as ContactHeroContent) as T;
     case "blog_hero":
