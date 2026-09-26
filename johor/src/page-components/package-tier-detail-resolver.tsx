@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchSiteContentClient } from "../../lib/api";
 import {
+  isArchivedPackageDetail,
+  isArchivedPackageRoute,
+} from "../../lib/package-archive";
+import {
   findPackageDetail,
   findTier,
   resolvePackageDetailsForTierRoute,
@@ -48,8 +52,8 @@ function getIdsFromLocation(
 }
 
 /**
- * Resolves a package tier on the client so tiers added after the last static
- * build still render (their route is served by the `.htaccess` fallback).
+ * Resolves an active package tier on the client. Archived identity-package
+ * tiers remain preserved in data but are intentionally unavailable publicly.
  */
 export default function PackageTierDetailResolver({
   buildPackageId,
@@ -57,18 +61,24 @@ export default function PackageTierDetailResolver({
   initialDetail,
   initialTier,
 }: PackageTierDetailResolverProps) {
-  const [state, setState] = useState<ResolvedState>(
-    initialDetail && initialTier
-      ? { status: "ready", detail: initialDetail, tier: initialTier }
-      : { status: "loading" },
-  );
+  const initialReady =
+    initialDetail && initialTier && !isArchivedPackageDetail(initialDetail)
+      ? { status: "ready" as const, detail: initialDetail, tier: initialTier }
+      : { status: "loading" as const };
+  const [state, setState] = useState<ResolvedState>(initialReady);
 
   useEffect(() => {
     const { packageId, tierId } = getIdsFromLocation(buildPackageId, buildTierId);
 
+    if (isArchivedPackageRoute(packageId)) {
+      setState({ status: "notfound" });
+      return;
+    }
+
     if (
       initialDetail &&
       initialTier &&
+      !isArchivedPackageDetail(initialDetail) &&
       packageId === buildPackageId &&
       tierId === buildTierId
     ) {
@@ -86,7 +96,7 @@ export default function PackageTierDetailResolver({
         const detail = findPackageDetail(details, packageId);
         const tier = findTier(detail, tierId);
 
-        if (!detail || !tier) {
+        if (!detail || isArchivedPackageDetail(detail) || !tier) {
           setState({ status: "notfound" });
           return;
         }
@@ -109,8 +119,8 @@ export default function PackageTierDetailResolver({
   if (state.status === "notfound") {
     return (
       <DetailNotFoundState
-        title="لم يتم العثور على هذه الدرجة"
-        description="ربما تم نقل هذه الباقة أو تغيير رابطها."
+        title="هذه الباقة مؤرشفة حالياً"
+        description="تفاصيل هذه الباقة غير متاحة للعرض حالياً، ويمكن إعادة تفعيلها لاحقاً."
         action={<Link href="/packages">العودة للباقات</Link>}
       />
     );
