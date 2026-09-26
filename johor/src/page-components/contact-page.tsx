@@ -7,6 +7,7 @@ import ContactDirectInfoSection from "../components/sections/contact-sections/co
 import ContactHeroSection from "../components/sections/contact-sections/contact-hero";
 import FormContact from "../components/sections/contact-sections/form-contact";
 import { reviseContentSection } from "../lib/client-content-revision";
+import { applyFinalClientFixes } from "../lib/final-client-fixes";
 
 type ContactPageProps = {
   form: ContactFormContent;
@@ -15,7 +16,10 @@ type ContactPageProps = {
 
 function ContactPage({ form, hero }: ContactPageProps) {
   const revisedForm = reviseContentSection("contact_form", form);
-  const revisedHero = reviseContentSection("contact_hero", hero);
+  const revisedHero = applyFinalClientFixes(
+    "contact_hero",
+    reviseContentSection("contact_hero", hero),
+  );
 
   return (
     <>
