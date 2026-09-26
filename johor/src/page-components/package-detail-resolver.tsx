@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchSiteContentClient } from "../../lib/api";
+import {
+  isArchivedPackageDetail,
+  isArchivedPackageRoute,
+} from "../../lib/package-archive";
 import { findPackageDetail, resolvePackageDetails } from "../../lib/packages";
 import type { PackageDetail } from "../data/package-details";
 import PackageDetailPage from "./package-detail-page";
@@ -34,21 +38,33 @@ function getPackageIdFromLocation(fallbackId: string): string {
 }
 
 /**
- * Resolves a package on the client so packages added after the last static
- * build still render (their route is served by the `.htaccess` fallback).
+ * Resolves a package on the client so active packages added after the last
+ * static build still render. Archived packages remain preserved in data but
+ * are intentionally unavailable on the public website.
  */
 export default function PackageDetailResolver({
   buildPackageId,
   initialDetail,
 }: PackageDetailResolverProps) {
-  const [state, setState] = useState<ResolvedState>(
-    initialDetail ? { status: "ready", detail: initialDetail } : { status: "loading" },
-  );
+  const initialReady =
+    initialDetail && !isArchivedPackageDetail(initialDetail)
+      ? { status: "ready" as const, detail: initialDetail }
+      : { status: "loading" as const };
+  const [state, setState] = useState<ResolvedState>(initialReady);
 
   useEffect(() => {
     const packageId = getPackageIdFromLocation(buildPackageId);
 
-    if (initialDetail && packageId === buildPackageId) {
+    if (isArchivedPackageRoute(packageId)) {
+      setState({ status: "notfound" });
+      return;
+    }
+
+    if (
+      initialDetail &&
+      !isArchivedPackageDetail(initialDetail) &&
+      packageId === buildPackageId
+    ) {
       return;
     }
 
@@ -62,7 +78,7 @@ export default function PackageDetailResolver({
         const details = resolvePackageDetails(site);
         const detail = findPackageDetail(details, packageId);
 
-        if (!detail) {
+        if (!detail || isArchivedPackageDetail(detail)) {
           setState({ status: "notfound" });
           return;
         }
@@ -85,8 +101,8 @@ export default function PackageDetailResolver({
   if (state.status === "notfound") {
     return (
       <DetailNotFoundState
-        title="لم يتم العثور على هذه الباقة"
-        description="ربما تم نقل الباقة أو تغيير رابطها."
+        title="هذه الباقة مؤرشفة حالياً"
+        description="الباقة غير متاحة للعرض حالياً، ويمكن إعادة تفعيلها لاحقاً."
         action={<Link href="/packages">العودة للباقات</Link>}
       />
     );
