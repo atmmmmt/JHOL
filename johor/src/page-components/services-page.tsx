@@ -9,6 +9,7 @@ import FeaturedServicesSection from "../components/sections/home-sections/view-a
 import ServicesExtraSections from "../components/sections/servies-sections/services-extra-sections";
 import ServicesHeroSection from "../components/sections/servies-sections/hero-service-section";
 import { reviseContentSection } from "../lib/client-content-revision";
+import { applyFinalClientFixes } from "../lib/final-client-fixes";
 
 type ServicesPageProps = {
   featuredServices: FeaturedServicesContent;
@@ -19,9 +20,9 @@ function ServicesPage({
   featuredServices,
   hero,
 }: ServicesPageProps) {
-  const revisedFeaturedServices = reviseContentSection(
+  const revisedFeaturedServices = applyFinalClientFixes(
     "featured_services",
-    featuredServices,
+    reviseContentSection("featured_services", featuredServices),
   );
   const revisedHero = reviseContentSection("services_hero", hero);
 

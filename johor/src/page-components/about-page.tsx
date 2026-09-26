@@ -13,6 +13,7 @@ import SecondAboutSection from "../components/sections/home-sections/abour-secti
 import BlendStatementSection from "../components/sections/home-sections/blend-statement-section";
 import BrandLogosSection from "../components/sections/home-sections/brand-logos-section";
 import { reviseContentSection } from "../lib/client-content-revision";
+import { applyFinalClientFixes } from "../lib/final-client-fixes";
 
 type AboutPageProps = {
   brandStory: BrandStoryContent;
@@ -27,7 +28,10 @@ function AboutPage({
   homeServicesReveal,
   partnersLogos,
 }: AboutPageProps) {
-  const revisedBrandStory = reviseContentSection("brand_story", brandStory);
+  const revisedBrandStory = applyFinalClientFixes(
+    "brand_story",
+    reviseContentSection("brand_story", brandStory),
+  );
   const revisedHero = reviseContentSection("about_hero", hero);
   const revisedServicesReveal = reviseContentSection(
     "home_services_reveal",

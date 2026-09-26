@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { reviseContentSection } from "./client-content-revision";
+import { applyFinalClientFixes } from "./final-client-fixes";
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://johor-back.euphoria-motiva.com";
@@ -79,6 +80,13 @@ function getByPath(obj: unknown, path: string[]): unknown {
   return current;
 }
 
+function applyClientContent<T>(sectionKey: string, content: T): T {
+  return applyFinalClientFixes(
+    sectionKey,
+    reviseContentSection(sectionKey, content),
+  );
+}
+
 /**
  * Fetches the freshest image URL for a given content sectionKey + JSON path,
  * bypassing the static build-time snapshot. Falls back to `initialSrc` until
@@ -142,7 +150,7 @@ export function useLiveImage(
  */
 export function useLiveSection<T>(sectionKey: string, initialData: T): T {
   const [data, setData] = useState<T>(() =>
-    reviseContentSection(sectionKey, initialData),
+    applyClientContent(sectionKey, initialData),
   );
 
   useEffect(() => {
@@ -156,7 +164,7 @@ export function useLiveSection<T>(sectionKey: string, initialData: T): T {
           const section = findSection(entries, sectionKey);
           if (section) {
             const orderedSection = applyLiveSectionOrdering(sectionKey, section);
-            setData(reviseContentSection(sectionKey, orderedSection) as T);
+            setData(applyClientContent(sectionKey, orderedSection) as T);
           }
         })
         .catch(() => undefined);
